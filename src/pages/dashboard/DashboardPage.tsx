@@ -5,28 +5,15 @@ export default function DashboardPage() {
     { title: "Total Projects", value: "24", change: "+12%", icon: FolderGit2, color: "from-indigo-500 to-violet-600" },
     { title: "Experiences", value: "8", change: "+2", icon: Briefcase, color: "from-violet-500 to-purple-600" },
     { title: "Portfolio Views", value: "14.2k", change: "+28.4%", icon: Eye, color: "from-cyan-500 to-blue-600" },
-    { title: "Active Clients", value: "12", change: "+4", icon: Users, color: "from-emerald-500 to-teal-600" },
-    { title: "Total Projects", value: "24", change: "+12%", icon: FolderGit2, color: "from-indigo-500 to-violet-600" },
-    { title: "Experiences", value: "8", change: "+2", icon: Briefcase, color: "from-violet-500 to-purple-600" },
-    { title: "Portfolio Views", value: "14.2k", change: "+28.4%", icon: Eye, color: "from-cyan-500 to-blue-600" },
-    { title: "Active Clients", value: "12", change: "+4", icon: Users, color: "from-emerald-500 to-teal-600" },
-    { title: "Total Projects", value: "24", change: "+12%", icon: FolderGit2, color: "from-indigo-500 to-violet-600" },
-    { title: "Experiences", value: "8", change: "+2", icon: Briefcase, color: "from-violet-500 to-purple-600" },
-    { title: "Portfolio Views", value: "14.2k", change: "+28.4%", icon: Eye, color: "from-cyan-500 to-blue-600" },
-    { title: "Active Clients", value: "12", change: "+4", icon: Users, color: "from-emerald-500 to-teal-600" },
-    { title: "Total Projects", value: "24", change: "+12%", icon: FolderGit2, color: "from-indigo-500 to-violet-600" },
-    { title: "Experiences", value: "8", change: "+2", icon: Briefcase, color: "from-violet-500 to-purple-600" },
-    { title: "Portfolio Views", value: "14.2k", change: "+28.4%", icon: Eye, color: "from-cyan-500 to-blue-600" },
-    { title: "Active Clients", value: "12", change: "+4", icon: Users, color: "from-emerald-500 to-teal-600" },
-    { title: "Total Projects", value: "24", change: "+12%", icon: FolderGit2, color: "from-indigo-500 to-violet-600" },
-    { title: "Experiences", value: "8", change: "+2", icon: Briefcase, color: "from-violet-500 to-purple-600" },
-    { title: "Portfolio Views", value: "14.2k", change: "+28.4%", icon: Eye, color: "from-cyan-500 to-blue-600" },
-    { title: "Active Clients", value: "12", change: "+4", icon: Users, color: "from-emerald-500 to-teal-600" },
+    { title: "Contacts", value: "12", change: "+4", icon: Users, color: "from-emerald-500 to-teal-600" },
   ];
 
   const recentProjects = [
+    { name: "E-Commerce Suite", category: "Full Stack", status: "Completed", date: "Jul 2026" },
+    { name: "AI Image Generator UI", category: "React / Vite", status: "In Review", date: "Jun 2026" },
     { name: "Portfolio.OS Dashboard", category: "Web App", status: "Active", date: "Aug 2026" },
     { name: "E-Commerce Suite", category: "Full Stack", status: "Completed", date: "Jul 2026" },
+    { name: "AI Image Generator UI", category: "React / Vite", status: "In Review", date: "Jun 2026" },
     { name: "AI Image Generator UI", category: "React / Vite", status: "In Review", date: "Jun 2026" },
   ];
 
@@ -122,34 +109,92 @@ export default function DashboardPage() {
           <div>
             <h2 className="text-lg font-bold text-white mb-2">Portfolio Analytics</h2>
             <p className="text-sm text-slate-400 leading-relaxed mb-6">
-              Your overall engagement and profile performance has increased significantly over the last 30 days.
+              Traffic distribution across your portfolio categories.
             </p>
-            <div className="space-y-4">
-              <div>
-                <div className="flex justify-between text-xs font-semibold text-slate-300 mb-1">
-                  <span>Profile Completion</span>
-                  <span>92%</span>
-                </div>
-                <div className="h-2 w-full rounded-full bg-slate-800 overflow-hidden">
-                  <div className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 w-[92%]" />
-                </div>
+
+            {/* Donut / Pie Chart */}
+            <div className="relative flex items-center justify-center my-4">
+              <svg className="h-44 w-44 transform -rotate-90" viewBox="0 0 36 36">
+                {/* Background Circle Track */}
+                <path
+                  className="text-slate-800"
+                  strokeWidth="3.8"
+                  stroke="currentColor"
+                  fill="none"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                {/* Segment 1: Projects (Indigo) - 45% */}
+                <path
+                  className="text-indigo-500 transition-all duration-500 hover:opacity-80"
+                  strokeDasharray="45, 100"
+                  strokeWidth="3.8"
+                  strokeLinecap="round"
+                  stroke="currentColor"
+                  fill="none"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                {/* Segment 2: Experiences (Cyan) - 30% */}
+                <path
+                  className="text-cyan-400 transition-all duration-500 hover:opacity-80"
+                  strokeDasharray="30, 100"
+                  strokeDashoffset="-45"
+                  strokeWidth="3.8"
+                  strokeLinecap="round"
+                  stroke="currentColor"
+                  fill="none"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                {/* Segment 3: Contacts (Emerald) - 25% */}
+                <path
+                  className="text-emerald-400 transition-all duration-500 hover:opacity-80"
+                  strokeDasharray="25, 100"
+                  strokeDashoffset="-75"
+                  strokeWidth="3.8"
+                  strokeLinecap="round"
+                  stroke="currentColor"
+                  fill="none"
+                  d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+              </svg>
+              {/* Inner Center Content */}
+              <div className="absolute flex flex-col items-center justify-center text-center">
+                <span className="text-2xl font-bold text-white">14.2k</span>
+                <span className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider">Total Views</span>
               </div>
-              <div>
-                <div className="flex justify-between text-xs font-semibold text-slate-300 mb-1">
-                  <span>Server Uptime</span>
-                  <span>99.9%</span>
+            </div>
+
+            {/* Chart Legend */}
+            <div className="mt-6 space-y-2.5">
+              <div className="flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2">
+                  <span className="h-3 w-3 rounded-full bg-indigo-500"></span>
+                  <span className="text-slate-300 font-medium">Projects Views</span>
                 </div>
-                <div className="h-2 w-full rounded-full bg-slate-800 overflow-hidden">
-                  <div className="h-full rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 w-[99.9%]" />
+                <span className="font-semibold text-white">45%</span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2">
+                  <span className="h-3 w-3 rounded-full bg-cyan-400"></span>
+                  <span className="text-slate-300 font-medium">Experience Views</span>
                 </div>
+                <span className="font-semibold text-white">30%</span>
+              </div>
+              <div className="flex items-center justify-between text-xs">
+                <div className="flex items-center gap-2">
+                  <span className="h-3 w-3 rounded-full bg-emerald-400"></span>
+                  <span className="text-slate-300 font-medium">Direct Contacts</span>
+                </div>
+                <span className="font-semibold text-white">25%</span>
               </div>
             </div>
           </div>
+
           <div className="mt-8 pt-6 border-t border-slate-800/80 text-xs text-slate-400 flex items-center justify-between">
             <span>System Status: <strong className="text-emerald-400">Optimal</strong></span>
             <span>v1.0.4</span>
           </div>
         </div>
+
       </div>
     </div>
   );
