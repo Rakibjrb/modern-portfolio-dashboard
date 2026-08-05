@@ -5,6 +5,9 @@ import SignUp from "../pages/public/SignUp";
 import Unauthorized from "../pages/public/Unauthorized";
 import NotFoundPage from "../pages/public/NotFoundPage";
 import ProtectedRoute from "./protected.routes";
+import DashboardPage from "../pages/dashboard/DashboardPage";
+import ProjectsPage from "../pages/dashboard/ProjectsPage/ProjectsPage";
+import ExperiencesPage from "../pages/dashboard/ExperiencesPage/ExperiencesPage";
 
 const router = createBrowserRouter([
     {
@@ -12,7 +15,7 @@ const router = createBrowserRouter([
         element: <Navigate to="/login" replace />,
     },
     {
-        path: "/admin",
+        path: "/dashboard",
         element: (
             <ProtectedRoute allowedRoles={["super_admin",]}>
                 <App />
@@ -21,6 +24,18 @@ const router = createBrowserRouter([
 
         //protected dashboard routes here
         children: [
+            {
+                path: "/dashboard",
+                element: <DashboardPage />,
+            },
+            {
+                path: "/dashboard/projects",
+                element: <ProjectsPage />,
+            },
+            {
+                path: "/dashboard/experiences",
+                element: <ExperiencesPage />,
+            },
         ],
     },
     {
