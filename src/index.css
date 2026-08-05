@@ -1,0 +1,18 @@
+@import "tailwindcss";
+
+@theme {
+  --font-lexend: "Lexend", sans-serif;
+}
+
+html,
+body,
+* {
+  font-family: "Lexend", sans-serif !important;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+}
