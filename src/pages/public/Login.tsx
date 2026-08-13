@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Link } from "react-router";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -217,17 +216,6 @@ export default function Login() {
             )}
           </button>
         </form>
-
-        {/* Footer Link */}
-        <p className="mt-8 text-center text-sm text-slate-400">
-          Don't have an account?{" "}
-          <Link
-            to="/signup"
-            className="font-semibold text-indigo-400 hover:text-indigo-300 transition-colors"
-          >
-            Sign up
-          </Link>
-        </p>
       </div>
     </div>
   );
