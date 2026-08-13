@@ -1,5 +1,5 @@
 import { Layout, Menu } from "antd";
-import { Calendar, ChevronLeft, ChevronRight, GraduationCap, LayoutDashboard, LogOut, Settings } from "lucide-react";
+import { Calendar, ChevronLeft, ChevronRight, GraduationCap, LayoutDashboard, LogOut, Mail, Settings } from "lucide-react";
 import { Link, useLocation } from "react-router";
 
 const { Sider } = Layout;
@@ -19,6 +19,11 @@ const sidebarItems = [
         key: "/dashboard/experiences",
         label: <Link to="/dashboard/experiences" className="text-sm font-medium">Experiences</Link>,
         icon: <GraduationCap className="w-5 h-5" />,
+    },
+    {
+        key: "/dashboard/contacts",
+        label: <Link to="/dashboard/contacts" className="text-sm font-medium">Messages</Link>,
+        icon: <Mail className="w-5 h-5" />,
     },
 ];
 

@@ -7,6 +7,7 @@ import ProtectedRoute from "./protected.routes";
 import DashboardPage from "../pages/dashboard/DashboardPage";
 import ProjectsPage from "../pages/dashboard/ProjectsPage/ProjectsPage";
 import ExperiencesPage from "../pages/dashboard/ExperiencesPage/ExperiencesPage";
+import ContactsPage from "../pages/dashboard/ContactsPage/ContactsPage";
 
 const router = createBrowserRouter([
     {
@@ -34,6 +35,10 @@ const router = createBrowserRouter([
             {
                 path: "/dashboard/experiences",
                 element: <ExperiencesPage />,
+            },
+            {
+                path: "/dashboard/contacts",
+                element: <ContactsPage />,
             },
         ],
     },
