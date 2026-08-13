@@ -6,7 +6,7 @@ import { Toaster } from "sonner";
 import { ConfigProvider } from "antd";
 import "./index.css";
 
-createRoot(document.getElementById("root")).render(
+createRoot(document.getElementById("root") as HTMLElement).render(
   <StrictMode>
     <ConfigProvider
       theme={{
