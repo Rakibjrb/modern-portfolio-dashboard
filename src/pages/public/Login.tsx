@@ -1,20 +1,53 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router";
+import { useLoginMutation } from "../../redux/features/auth/authApis";
+import { setUser } from "../../redux/features/auth/authSlice";
+import { toast } from "sonner";
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [login, { isLoading }] = useLoginMutation();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    // Simulate login request
-    setTimeout(() => {
-      setIsLoading(false);
-      alert(`Logged in with: ${email}`);
-    }, 1200);
+
+    try {
+
+      const res = await login({
+        email,
+        password,
+      }).unwrap();
+
+      // Store tokens and user data in Redux
+      // eslint-disable-next-line no-unsafe-optional-chaining
+      const { user, accessToken, refreshToken } = res?.data;
+      dispatch(setUser({ user, token: accessToken, refreshToken }));
+
+      // Show success toast immediately
+      toast.success("Login successful!", {
+        description: "Welcome back! Redirecting to dashboard...",
+        duration: 2000,
+      });
+
+      // Navigate after a short delay to allow toast to be seen
+      setTimeout(() => {
+        navigate(`/dashboard`);
+      }, 1000);
+    } catch (err) {
+      const errorMessage =
+        err?.data?.message || "Login failed. Please try again.";
+      toast.error("Login failed", {
+        description: errorMessage,
+        duration: 4000,
+      });
+    }
   };
 
   return (
@@ -186,7 +219,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full rounded-xl bg-gradient-to-r from-indigo-500 to-violet-600 py-3 px-4 font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all duration-200 hover:from-indigo-600 hover:to-violet-700 hover:shadow-indigo-500/35 active:scale-[0.99] disabled:opacity-70 disabled:cursor-not-allowed"
+            className="cursor-pointer w-full rounded-xl bg-gradient-to-r from-indigo-500 to-violet-600 py-3 px-4 font-semibold text-white shadow-lg shadow-indigo-500/25 transition-all duration-200 hover:from-indigo-600 hover:to-violet-700 hover:shadow-indigo-500/35 active:scale-[0.99] disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {isLoading ? (
               <div className="flex items-center justify-center space-x-2">

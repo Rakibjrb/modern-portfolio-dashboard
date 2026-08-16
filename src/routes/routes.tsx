@@ -8,6 +8,7 @@ import DashboardPage from "../pages/dashboard/DashboardPage";
 import ProjectsPage from "../pages/dashboard/ProjectsPage/ProjectsPage";
 import ExperiencesPage from "../pages/dashboard/ExperiencesPage/ExperiencesPage";
 import ContactsPage from "../pages/dashboard/ContactsPage/ContactsPage";
+import PublicRoute from "./Public.routes";
 
 const router = createBrowserRouter([
     {
@@ -44,7 +45,9 @@ const router = createBrowserRouter([
     },
     {
         path: "/login",
-        element: <Login />,
+        element: <PublicRoute>
+            <Login />
+        </PublicRoute>,
     },
 
     // unauthorized page

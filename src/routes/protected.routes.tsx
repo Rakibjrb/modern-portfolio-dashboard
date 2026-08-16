@@ -27,11 +27,6 @@ const ProtectedRoute = ({ children, allowedRoles = [] }: ProtectedRouteProps) =>
         return <Navigate to="/login" replace />;
     }
 
-    // If token is expired, redirect to login
-    if (decodedUser && decodedUser.exp && decodedUser.exp < Date.now() / 1000) {
-        return <Navigate to="/login" replace />;
-    }
-
     // If roles are specified and user doesn't have required role, redirect to unauthorized
     if (allowedRoles.length > 0 && decodedUser) {
         const userRole = decodedUser.role || decodedUser.platformRole;
