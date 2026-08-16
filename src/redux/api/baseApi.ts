@@ -15,7 +15,7 @@ const baseQuery = fetchBaseQuery({
     },
 });
 
-const baseQueryWithRefreshToken = async (arg, api, extraOptions) => {
+const baseQueryWithRefreshToken = async (arg: any, api: any, extraOptions: any) => {
     let result = await baseQuery(arg, api, extraOptions);
 
     if (result.error?.status === 404) {

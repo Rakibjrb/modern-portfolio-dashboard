@@ -18,7 +18,7 @@ const ProtectedRoute = ({ children, allowedRoles = [] }: ProtectedRouteProps) =>
     }
 
     // Verify token and get user info
-    let decodedUser = null;
+    let decodedUser: any = null;
     try {
         decodedUser = verifyToken(token);
         // eslint-disable-next-line no-unused-vars
@@ -29,7 +29,7 @@ const ProtectedRoute = ({ children, allowedRoles = [] }: ProtectedRouteProps) =>
 
     // If roles are specified and user doesn't have required role, redirect to unauthorized
     if (allowedRoles.length > 0 && decodedUser) {
-        const userRole = decodedUser.role || decodedUser.platformRole;
+        const userRole = decodedUser.role;
         if (!allowedRoles.includes(userRole)) {
             return <Navigate to="/unauthorized" replace />;
         }

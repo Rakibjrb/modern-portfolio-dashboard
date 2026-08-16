@@ -40,7 +40,7 @@ export default function Login() {
       setTimeout(() => {
         navigate(`/dashboard`);
       }, 1000);
-    } catch (err) {
+    } catch (err: any) {
       const errorMessage =
         err?.data?.message || "Login failed. Please try again.";
       toast.error("Login failed", {

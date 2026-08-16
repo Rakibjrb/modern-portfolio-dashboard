@@ -40,7 +40,7 @@ export default function Sidebar({ minimizeSidebar, setMinimizeSidebar, openKeys,
     const handleLogout = async () => {
         try {
             await apiLogout({ refreshToken }).unwrap();
-        } catch (error) {
+        } catch (error: any) {
             toast.error(error?.data?.message || "Something went wrong")
         } finally {
             toast.success("Logout Success");

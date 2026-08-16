@@ -33,7 +33,7 @@ export const { setUser, setTokens, logout } = authSlice.actions;
 export default authSlice.reducer;
 
 // Selectors
-export const useCurrentToken = (state) => state.auth.token;
-export const useCurrentRefreshToken = (state) => state.auth.refreshToken;
-export const selectCurrentUser = (state) => state.auth.user;
-export const selectIsAuthenticated = (state) => !!state.auth.token;
+export const useCurrentToken = (state: any) => state.auth.token;
+export const useCurrentRefreshToken = (state: any) => state.auth.refreshToken;
+export const selectCurrentUser = (state: any) => state.auth.user;
+export const selectIsAuthenticated = (state: any) => !!state.auth.token;
