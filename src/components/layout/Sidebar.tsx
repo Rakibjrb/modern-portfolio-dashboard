@@ -1,6 +1,10 @@
 import { Layout, Menu } from "antd";
 import { Calendar, ChevronLeft, ChevronRight, GraduationCap, LayoutDashboard, LogOut, Mail, Settings } from "lucide-react";
 import { Link, useLocation } from "react-router";
+import { useLogoutMutation } from "../../redux/features/auth/authApis";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { logout, useCurrentRefreshToken } from "../../redux/features/auth/authSlice";
+import { toast } from "sonner";
 
 const { Sider } = Layout;
 
@@ -29,6 +33,20 @@ const sidebarItems = [
 
 export default function Sidebar({ minimizeSidebar, setMinimizeSidebar, openKeys, onOpenChange }: { minimizeSidebar: boolean, setMinimizeSidebar: (value: boolean) => void, openKeys: string[], onOpenChange: (keys: string[]) => void }) {
     const location = useLocation();
+    const refreshToken = useAppSelector(useCurrentRefreshToken);
+    const dispatch = useAppDispatch();
+    const [apiLogout] = useLogoutMutation();
+
+    const handleLogout = async () => {
+        try {
+            await apiLogout({ refreshToken }).unwrap();
+        } catch (error) {
+            toast.error(error?.data?.message || "Something went wrong")
+        } finally {
+            toast.success("Logout Success");
+            dispatch(logout());
+        }
+    }
 
     return (
         <Sider
@@ -108,6 +126,7 @@ export default function Sidebar({ minimizeSidebar, setMinimizeSidebar, openKeys,
                                     Settings
                                 </button>
                                 <button
+                                    onClick={() => handleLogout()}
                                     className="w-full flex items-center gap-3 px-4 py-2.5 cursor-pointer text-slate-400 hover:text-slate-100 hover:bg-slate-900/90 transition-all rounded-xl border border-transparent hover:border-slate-800 text-sm font-medium">
                                     <LogOut className="w-5 h-5" />
                                     Logout
@@ -120,6 +139,7 @@ export default function Sidebar({ minimizeSidebar, setMinimizeSidebar, openKeys,
                                     <Settings className="w-5 h-5" />
                                 </button>
                                 <button
+                                    onClick={() => handleLogout()}
                                     className="w-full flex items-center justify-center p-2.5 cursor-pointer text-slate-400 hover:text-slate-100 hover:bg-slate-900/90 transition-all rounded-xl border border-transparent hover:border-slate-800">
                                     <LogOut className="w-5 h-5" />
                                 </button>
