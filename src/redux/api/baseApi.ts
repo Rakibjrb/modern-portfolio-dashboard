@@ -29,42 +29,35 @@ const baseQueryWithRefreshToken = async (arg: any, api: any, extraOptions: any) 
     }
 
     if (result.error?.status === 401) {
-        // Try to refresh the token using refresh token from Redux state
-        const { refreshToken } = api.getState().auth;
+        // Try to refresh the token using refresh token from cookies state
 
-        if (refreshToken) {
-            try {
-                const res = await fetch(`${ENV.API_BASE_URL}/auth/refresh-token`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ refreshToken }),
-                });
+        try {
+            const res = await fetch(`${ENV.API_BASE_URL}/auth/refresh-token`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ refreshToken: "" }),
+            });
 
-                const data = await res.json();
+            const data = await res.json();
 
-                if (data?.success && data?.data?.authToken) {
-                    // Update tokens in Redux store
-                    const newTokens = {
-                        token: data.data.authToken,
-                        refreshToken: data.data.refreshToken || refreshToken, // Use new refresh token if provided
-                    };
+            if (data?.success && data?.data?.authToken) {
+                // Update tokens in Redux store
+                const newTokens = {
+                    accessToken: data.data.authToken,
+                };
 
-                    api.dispatch(setTokens(newTokens));
+                api.dispatch(setTokens(newTokens));
 
-                    // Retry the original request
-                    result = await baseQuery(arg, api, extraOptions);
-                } else {
-                    // Refresh failed, logout user
-                    api.dispatch(logout());
-                }
-            } catch (error) {
-                console.error("Token refresh failed:", error);
+                // Retry the original request
+                result = await baseQuery(arg, api, extraOptions);
+            } else {
+                // Refresh failed, logout user
                 api.dispatch(logout());
             }
-        } else {
-            // No refresh token available, logout user
+        } catch (error) {
+            console.error("Token refresh failed:", error);
             api.dispatch(logout());
         }
     }
