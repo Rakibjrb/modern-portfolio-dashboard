@@ -1,6 +1,9 @@
 import { FolderGit2, Briefcase, Eye, ArrowUpRight, TrendingUp, Users } from "lucide-react";
+import { useNavigate } from "react-router";
 
 export default function DashboardPage() {
+  const navigate = useNavigate();
+
   const stats = [
     { title: "Total Projects", value: "24", change: "+12%", icon: FolderGit2, color: "from-indigo-500 to-violet-600" },
     { title: "Experiences", value: "8", change: "+2", icon: Briefcase, color: "from-violet-500 to-purple-600" },
@@ -29,7 +32,7 @@ export default function DashboardPage() {
             Welcome back! Here's what's happening with your portfolio today.
           </p>
         </div>
-        <button className="self-start sm:self-auto inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all hover:from-indigo-600 hover:to-violet-700 hover:shadow-indigo-500/30">
+        <button onClick={() => navigate("/dashboard/projects")} className="cursor-pointer self-start sm:self-auto inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-600 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-indigo-500/20 transition-all hover:from-indigo-600 hover:to-violet-700 hover:shadow-indigo-500/30">
           <span>Add New Project</span>
           <ArrowUpRight className="w-4 h-4" />
         </button>

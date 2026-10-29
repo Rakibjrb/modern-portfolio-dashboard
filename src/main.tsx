@@ -5,18 +5,25 @@ import router from "./routes/routes";
 import { Toaster } from "sonner";
 import { ConfigProvider } from "antd";
 import "./index.css";
+import { Provider } from "react-redux";
+import { persistor, store } from "./redux/store";
+import { PersistGate } from "redux-persist/integration/react";
 
-createRoot(document.getElementById("root")).render(
+createRoot(document.getElementById("root") as HTMLElement).render(
   <StrictMode>
-    <ConfigProvider
-      theme={{
-        token: {
-          fontFamily: '"Lexend", sans-serif',
-        },
-      }}
-    >
-      <RouterProvider router={router} />
-      <Toaster position="bottom-right" richColors />
-    </ConfigProvider>
+    <Provider store={store}>
+      <ConfigProvider
+        theme={{
+          token: {
+            fontFamily: '"Lexend", sans-serif',
+          },
+        }}
+      >
+        <PersistGate loading={null} persistor={persistor}>
+          <RouterProvider router={router} />
+        </PersistGate>
+        <Toaster position="bottom-right" richColors />
+      </ConfigProvider>
+    </Provider>
   </StrictMode>
 );
