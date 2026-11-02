@@ -70,6 +70,7 @@ export const baseApi = createApi({
     baseQuery: baseQueryWithRefreshToken,
     tagTypes: [
         "auth",
+        "Projects"
     ],
     endpoints: () => ({}),
 });
