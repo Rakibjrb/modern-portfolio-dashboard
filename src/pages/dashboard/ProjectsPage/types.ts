@@ -5,12 +5,7 @@ export type Meta = {
   totalPages: number;
 };
 
-export type ProjectCategory =
-  | ""
-  | "MERN"
-  | "Frontend"
-  | "Backend"
-  | "Automation";
+export type ProjectCategory = "MERN" | "Frontend" | "Backend" | "Automation";
 
 export interface Project {
   id: string;
@@ -20,10 +15,12 @@ export interface Project {
   shortDescription: string;
   fullDescription: string;
   thumbnail: string;
-  techStack: string[];
-  liveUrl?: string;
-  githubClientUrl?: string;
-  githubServerUrl?: string;
+  technologies: string[];
+  url: {
+    live: string;
+    githubClient?: string | undefined;
+    githubServer?: string | undefined;
+  };
   featured: boolean;
   order: number;
   createdAt: string;

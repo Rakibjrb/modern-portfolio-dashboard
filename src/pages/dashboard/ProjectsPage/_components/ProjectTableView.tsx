@@ -79,11 +79,11 @@ export function ProjectTableView({
     },
     {
       title: "Tech Stack",
-      dataIndex: "techStack",
-      key: "techStack",
-      render: (techStack: string[]) => (
+      dataIndex: "technologies",
+      key: "technologies",
+      render: (technologies: string[]) => (
         <div className="flex max-w-xs flex-wrap gap-1">
-          {techStack.slice(0, 4).map((tech, idx) => (
+          {technologies.slice(0, 4).map((tech, idx) => (
             <span
               key={idx}
               className="rounded border border-slate-700/50 bg-slate-800 px-1.5 py-0.5 text-[10px] font-medium text-slate-300"
@@ -91,9 +91,9 @@ export function ProjectTableView({
               {tech}
             </span>
           ))}
-          {techStack.length > 4 && (
+          {technologies.length > 4 && (
             <span className="self-center text-[10px] font-medium text-slate-400">
-              +{techStack.length - 4}
+              +{technologies.length - 4}
             </span>
           )}
         </div>
@@ -140,26 +140,26 @@ export function ProjectTableView({
       align: "right",
       render: (_: unknown, record: Project) => (
         <div className="flex items-center justify-end gap-2">
-          {record.liveUrl && (
+          {record.url.live && (
             <a
-              href={record.liveUrl}
+              href={record.url.live}
               target="_blank"
               rel="noreferrer"
               title="Live Demo"
               className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-700/60 bg-slate-800/60 text-slate-400 transition-colors hover:bg-indigo-600/20 hover:text-indigo-400"
             >
-              <ExternalLink className="h-3.5 w-3.5" />
+              <Globe className="h-3.5 w-3.5" />
             </a>
           )}
-          {(record.githubClientUrl || record.githubServerUrl) && (
+          {(record.url.githubClient || record.url.githubServer) && (
             <a
-              href={record.githubClientUrl || record.githubServerUrl}
+              href={record.url.githubClient || record.url.githubServer}
               target="_blank"
               rel="noreferrer"
               title="GitHub Repo"
               className="flex h-8 w-8 items-center justify-center rounded-lg border border-slate-700/60 bg-slate-800/60 text-slate-400 transition-colors hover:bg-violet-600/20 hover:text-violet-400"
             >
-              <Globe className="h-3.5 w-3.5" />
+              <ExternalLink className="h-3.5 w-3.5" />
             </a>
           )}
           <button

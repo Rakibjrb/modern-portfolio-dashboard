@@ -76,14 +76,14 @@ export default function ProjectsPage() {
         item.thumbnail ||
         item.image ||
         "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop",
-      techStack: Array.isArray(item.techStack)
+      technologies: Array.isArray(item.techStack)
         ? item.techStack
         : item.technologies || item.tags || [],
-      liveUrl: item.liveUrl || item.liveLink || "",
-      githubClientUrl:
-        item.githubClientUrl || item.clientRepo || item.githubClient || "",
-      githubServerUrl:
-        item.githubServerUrl || item.serverRepo || item.githubServer || "",
+      url: {
+        live: item.url.live,
+        githubClient: item.url.githubClient,
+        githubServer: item.url.githubServer,
+      },
       featured: Boolean(item.featured ?? item.isFeatured),
       order: typeof item.order === "number" ? item.order : 1,
       createdAt: item.createdAt || new Date().toISOString(),

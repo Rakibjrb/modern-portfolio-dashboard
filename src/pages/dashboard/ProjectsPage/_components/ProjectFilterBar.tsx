@@ -1,5 +1,4 @@
 import { Search, ArrowUpDown, Filter } from "lucide-react";
-import { type ProjectCategory } from "../types";
 import { useEffect, useState } from "react";
 
 interface ProjectFilterBarProps {
@@ -10,13 +9,7 @@ interface ProjectFilterBarProps {
   onSortChange: (sort: string) => void;
 }
 
-const CATEGORIES: ProjectCategory[] = [
-  "",
-  "MERN",
-  "Frontend",
-  "Backend",
-  "Automation",
-];
+const CATEGORIES = ["", "MERN", "Frontend", "Backend", "Automation"];
 
 export function ProjectFilterBar({
   onSearchChange,
