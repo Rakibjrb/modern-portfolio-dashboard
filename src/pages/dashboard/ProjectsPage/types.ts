@@ -1,8 +1,16 @@
-export type ProjectCategory = 'Full-Stack' | 'Frontend' | 'Backend' | 'Automation';
+export type Meta = {
+  page: number;
+  limit: number;
+  total: number;
+  totalPages: number;
+};
 
-export type ViewMode = 'grid' | 'table';
-
-export type SortOption = 'latest' | 'order' | 'title-asc' | 'title-desc';
+export type ProjectCategory =
+  | ""
+  | "MERN"
+  | "Frontend"
+  | "Backend"
+  | "Automation";
 
 export interface Project {
   id: string;

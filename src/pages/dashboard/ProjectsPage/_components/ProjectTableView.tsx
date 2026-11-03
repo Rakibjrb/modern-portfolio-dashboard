@@ -1,9 +1,12 @@
-import { Table, ConfigProvider, theme } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
-import { Star, ExternalLink, Pencil, Trash2, Globe } from 'lucide-react';
-import { type Project } from '../types';
+import { Table, ConfigProvider, theme } from "antd";
+import type { ColumnsType } from "antd/es/table";
+import { Star, ExternalLink, Pencil, Trash2, Globe } from "lucide-react";
+import { type Meta, type Project } from "../types";
 
 interface ProjectTableViewProps {
+  meta: Meta;
+  pagination: { page: number; limit: number };
+  setPagination: ({ page, limit }: { page: number; limit: number }) => void;
   projects: Project[];
   onEdit: (project: Project) => void;
   onDelete: (project: Project) => void;
@@ -11,13 +14,16 @@ interface ProjectTableViewProps {
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
-  'Full-Stack': 'bg-violet-500/10 text-violet-400 border-violet-500/20',
-  Frontend: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
-  Backend: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-  Automation: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+  "Full Stack": "bg-violet-500/10 text-violet-400 border-violet-500/20",
+  Frontend: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
+  Backend: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+  Automation: "bg-amber-500/10 text-amber-400 border-amber-500/20",
 };
 
 export function ProjectTableView({
+  meta,
+  pagination,
+  setPagination,
   projects,
   onEdit,
   onDelete,
@@ -25,9 +31,9 @@ export function ProjectTableView({
 }: ProjectTableViewProps) {
   const columns: ColumnsType<Project> = [
     {
-      title: 'Thumbnail',
-      dataIndex: 'thumbnail',
-      key: 'thumbnail',
+      title: "Thumbnail",
+      dataIndex: "thumbnail",
+      key: "thumbnail",
       width: 90,
       render: (thumbnail: string, record: Project) => (
         <div className="h-12 w-16 overflow-hidden rounded-lg border border-slate-700/60 bg-slate-950">
@@ -40,9 +46,9 @@ export function ProjectTableView({
       ),
     },
     {
-      title: 'Project & Slug',
-      dataIndex: 'title',
-      key: 'title',
+      title: "Project & Slug",
+      dataIndex: "title",
+      key: "title",
       render: (title: string, record: Project) => (
         <div>
           <div className="font-semibold text-white transition-colors hover:text-indigo-400">
@@ -55,26 +61,26 @@ export function ProjectTableView({
       ),
     },
     {
-      title: 'Category',
-      dataIndex: 'category',
-      key: 'category',
+      title: "Category",
+      dataIndex: "category",
+      key: "category",
       render: (category: string) => {
         const categoryStyle =
           CATEGORY_COLORS[category] ||
-          'bg-indigo-500/10 text-indigo-400 border-indigo-500/20';
+          "bg-indigo-500/10 text-indigo-400 border-indigo-500/20";
         return (
           <span
             className={`inline-block rounded-full border px-2.5 py-0.5 text-xs font-medium ${categoryStyle}`}
           >
-            {category}
+            {category === "mern" ? "Full Stack" : category}
           </span>
         );
       },
     },
     {
-      title: 'Tech Stack',
-      dataIndex: 'techStack',
-      key: 'techStack',
+      title: "Tech Stack",
+      dataIndex: "techStack",
+      key: "techStack",
       render: (techStack: string[]) => (
         <div className="flex max-w-xs flex-wrap gap-1">
           {techStack.slice(0, 4).map((tech, idx) => (
@@ -94,34 +100,34 @@ export function ProjectTableView({
       ),
     },
     {
-      title: 'Featured',
-      dataIndex: 'featured',
-      key: 'featured',
-      align: 'center',
+      title: "Featured",
+      dataIndex: "featured",
+      key: "featured",
+      align: "center",
       render: (featured: boolean, record: Project) => (
         <button
           onClick={() => onToggleFeatured(record.id)}
-          title={featured ? 'Featured' : 'Not Featured'}
+          title={featured ? "Featured" : "Not Featured"}
           className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold transition-all cursor-pointer ${
             featured
-              ? 'bg-amber-500/10 text-amber-400 border-amber-500/30 hover:bg-amber-500/20'
-              : 'bg-slate-800/60 text-slate-400 border-slate-700 hover:text-slate-200'
+              ? "bg-amber-500/10 text-amber-400 border-amber-500/30 hover:bg-amber-500/20"
+              : "bg-slate-800/60 text-slate-400 border-slate-700 hover:text-slate-200"
           }`}
         >
           <Star
             className={`h-3.5 w-3.5 ${
-              featured ? 'fill-amber-400 text-amber-400' : ''
+              featured ? "fill-amber-400 text-amber-400" : ""
             }`}
           />
-          <span>{featured ? 'Yes' : 'No'}</span>
+          <span>{featured ? "Yes" : "No"}</span>
         </button>
       ),
     },
     {
-      title: 'Order',
-      dataIndex: 'order',
-      key: 'order',
-      align: 'center',
+      title: "Order",
+      dataIndex: "order",
+      key: "order",
+      align: "center",
       render: (order: number) => (
         <span className="font-mono text-xs font-semibold text-slate-300">
           #{order}
@@ -129,9 +135,9 @@ export function ProjectTableView({
       ),
     },
     {
-      title: 'Actions',
-      key: 'actions',
-      align: 'right',
+      title: "Actions",
+      key: "actions",
+      align: "right",
       render: (_: unknown, record: Project) => (
         <div className="flex items-center justify-end gap-2">
           {record.liveUrl && (
@@ -181,11 +187,11 @@ export function ProjectTableView({
         algorithm: theme.darkAlgorithm,
         components: {
           Table: {
-            colorBgContainer: 'rgba(15, 23, 42, 0.8)',
-            headerBg: 'rgba(2, 6, 23, 0.6)',
-            colorBorderSecondary: 'rgba(51, 65, 85, 0.6)',
-            headerColor: '#94a3b8',
-            colorText: '#cbd5e1',
+            colorBgContainer: "rgba(15, 23, 42, 0.8)",
+            headerBg: "rgba(2, 6, 23, 0.6)",
+            colorBorderSecondary: "rgba(51, 65, 85, 0.6)",
+            headerColor: "#94a3b8",
+            colorText: "#cbd5e1",
           },
         },
       }}
@@ -195,11 +201,27 @@ export function ProjectTableView({
           rowKey="id"
           columns={columns}
           dataSource={projects}
-          pagination={false}
           scroll={{ x: true }}
+          pagination={{
+            current: pagination.page,
+            pageSize: pagination.limit,
+            total: meta.total,
+            showSizeChanger: false,
+            showQuickJumper: false,
+            showTotal: (total, range) =>
+              `${range[0]}-${range[1]} of ${total} orders`,
+            pageSizeOptions: ["10", "20", "50", "100"],
+            showLessItems: true,
+            simple: false,
+            onChange: (page, size) => {
+              setPagination({
+                page,
+                limit: size,
+              });
+            },
+          }}
         />
       </div>
     </ConfigProvider>
   );
 }
-
