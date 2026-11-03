@@ -1,9 +1,6 @@
-export type Meta = {
-  page: number;
-  limit: number;
-  total: number;
-  totalPages: number;
-};
+import { type Meta as CommonMeta } from "../../../types/common.types";
+
+export type Meta = CommonMeta;
 
 export type ProjectCategory = "MERN" | "Frontend" | "Backend" | "Automation";
 
