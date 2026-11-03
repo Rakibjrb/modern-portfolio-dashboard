@@ -1,5 +1,5 @@
-import { Star, ExternalLink, Pencil, Trash2, Globe } from 'lucide-react';
-import { type Project } from '../types';
+import { Star, ExternalLink, Pencil, Trash2, Globe } from "lucide-react";
+import { type Project } from "../types";
 
 interface ProjectCardProps {
   project: Project;
@@ -9,10 +9,10 @@ interface ProjectCardProps {
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
-  'Full-Stack': 'bg-violet-500/10 text-violet-400 border-violet-500/20',
-  Frontend: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
-  Backend: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-  Automation: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+  "Full-Stack": "bg-violet-500/10 text-violet-400 border-violet-500/20",
+  Frontend: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20",
+  Backend: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+  Automation: "bg-amber-500/10 text-amber-400 border-amber-500/20",
 };
 
 export function ProjectCard({
@@ -22,7 +22,8 @@ export function ProjectCard({
   onToggleFeatured,
 }: ProjectCardProps) {
   const categoryStyle =
-    CATEGORY_COLORS[project.category] || 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20';
+    CATEGORY_COLORS[project.category] ||
+    "bg-indigo-500/10 text-indigo-400 border-indigo-500/20";
 
   return (
     <div className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-slate-800 bg-slate-900/80 shadow-lg backdrop-blur-xl transition-all duration-300 hover:-translate-y-1 hover:border-slate-700 hover:shadow-2xl">
@@ -45,15 +46,17 @@ export function ProjectCard({
         {/* Featured Toggle Star Button */}
         <button
           onClick={() => onToggleFeatured(project.id)}
-          title={project.featured ? 'Remove from featured' : 'Mark as featured'}
-          className={`absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full border border-slate-700/60 backdrop-blur-md transition-all cursor-pointer ${project.featured
-            ? 'bg-amber-500/20 text-amber-400 hover:bg-amber-500/30'
-            : 'bg-slate-900/60 text-slate-400 hover:text-slate-200 hover:bg-slate-800/80'
-            }`}
+          title={project.featured ? "Remove from featured" : "Mark as featured"}
+          className={`absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full border border-slate-700/60 backdrop-blur-md transition-all cursor-pointer ${
+            project.featured
+              ? "bg-amber-500/20 text-amber-400 hover:bg-amber-500/30"
+              : "bg-slate-900/60 text-slate-400 hover:text-slate-200 hover:bg-slate-800/80"
+          }`}
         >
           <Star
-            className={`h-4 w-4 ${project.featured ? 'fill-amber-400 text-amber-400' : ''
-              }`}
+            className={`h-4 w-4 ${
+              project.featured ? "fill-amber-400 text-amber-400" : ""
+            }`}
           />
         </button>
 
@@ -75,7 +78,7 @@ export function ProjectCard({
 
           {/* Tech Stack Pills */}
           <div className="mt-4 flex flex-wrap gap-1.5">
-            {project.techStack.map((tech, i) => (
+            {project.technologies.map((tech, i) => (
               <span
                 key={i}
                 className="rounded-md bg-slate-800/80 border border-slate-700/50 px-2 py-0.5 text-[11px] font-medium text-slate-300"
@@ -90,9 +93,9 @@ export function ProjectCard({
         <div className="mt-6 flex items-center justify-between border-t border-slate-800/80 pt-4">
           {/* External Links */}
           <div className="flex items-center gap-2">
-            {project.liveUrl && (
+            {project.url.live && (
               <a
-                href={project.liveUrl}
+                href={project.url.live}
                 target="_blank"
                 rel="noreferrer"
                 title="View Live Demo"
@@ -101,9 +104,9 @@ export function ProjectCard({
                 <ExternalLink className="h-3.5 w-3.5" />
               </a>
             )}
-            {(project.githubClientUrl || project.githubServerUrl) && (
+            {(project.url.githubClient || project.url.githubServer) && (
               <a
-                href={project.githubClientUrl || project.githubServerUrl}
+                href={project.url.githubClient || project.url.githubServer}
                 target="_blank"
                 rel="noreferrer"
                 title="View GitHub Repository"
