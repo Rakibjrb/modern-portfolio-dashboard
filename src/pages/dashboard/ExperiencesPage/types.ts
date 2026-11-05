@@ -1,7 +1,12 @@
-export type EmploymentType = 'Full-time' | 'Part-time' | 'Contract' | 'Internship' | 'Freelance';
+export type EmploymentType =
+  | "Full-time"
+  | "Part-time"
+  | "Contract"
+  | "Internship"
+  | "Freelance";
 
 export interface Experience {
-  id: string;
+  _id: string;
   title: string;
   company: string;
   companyLogo?: string;
@@ -16,7 +21,7 @@ export interface Experience {
 }
 
 export interface Education {
-  id: string;
+  _id: string;
   degree: string;
   fieldOfStudy: string;
   institution: string;
@@ -29,4 +34,4 @@ export interface Education {
   order: number;
 }
 
-export type ActiveTab = 'experience' | 'education';
+export type ActiveTab = "experience" | "education";

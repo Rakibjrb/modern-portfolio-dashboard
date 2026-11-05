@@ -1,19 +1,20 @@
-import { useState, useMemo } from "react";
-import { Briefcase, GraduationCap, Plus, Sparkles } from "lucide-react";
+import { useState } from "react";
+import {
+  Briefcase,
+  GraduationCap,
+  Loader2,
+  Plus,
+  Sparkles,
+} from "lucide-react";
 import { type Experience, type Education, type ActiveTab } from "./types";
-import { initialExperiences, initialEducation } from "./mockData";
 import ExperienceCard from "./_components/ExperienceCard";
 import EducationCard from "./_components/EducationCard";
 import ExperienceDrawer from "./_components/ExperienceDrawer";
 import DeleteConfirmModal from "./_components/DeleteConfirmModal";
+import { useGetExperienceQuery } from "../../../redux/features/experiences/experienceApi";
 
 export default function ExperiencesPage() {
   const [activeTab, setActiveTab] = useState<ActiveTab>("experience");
-  const [experiences, setExperiences] =
-    useState<Experience[]>(initialExperiences);
-  const [educationList, setEducationList] =
-    useState<Education[]>(initialEducation);
-
   // Drawer and Modal states
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Experience | Education | null>(
@@ -25,32 +26,15 @@ export default function ExperiencesPage() {
     null,
   );
 
-  const [searchQuery, setSearchQuery] = useState("");
+  const {
+    data: experienceData,
+    isLoading,
+    isError,
+    refetch,
+  } = useGetExperienceQuery({});
 
-  // Filtered lists based on search query
-  const filteredExperiences = useMemo(() => {
-    if (!searchQuery.trim()) return experiences;
-    const q = searchQuery.toLowerCase();
-    return experiences.filter(
-      (exp) =>
-        exp.title.toLowerCase().includes(q) ||
-        exp.company.toLowerCase().includes(q) ||
-        exp.location.toLowerCase().includes(q) ||
-        exp.responsibilities.some((r) => r.toLowerCase().includes(q)),
-    );
-  }, [experiences, searchQuery]);
-
-  const filteredEducation = useMemo(() => {
-    if (!searchQuery.trim()) return educationList;
-    const q = searchQuery.toLowerCase();
-    return educationList.filter(
-      (edu) =>
-        edu.degree.toLowerCase().includes(q) ||
-        edu.fieldOfStudy.toLowerCase().includes(q) ||
-        edu.institution.toLowerCase().includes(q) ||
-        edu.location.toLowerCase().includes(q),
-    );
-  }, [educationList, searchQuery]);
+  const professionalExperiences = experienceData?.data?.professional || {};
+  const academicExperiences = experienceData?.data?.academic || {};
 
   // Handlers for Add / Edit
   const handleOpenAddDrawer = () => {
@@ -68,44 +52,14 @@ export default function ExperiencesPage() {
     setIsDrawerOpen(true);
   };
 
-  const handleSaveExperience = (savedExp: Experience) => {
-    setExperiences((prev) => {
-      const exists = prev.some((item) => item.id === savedExp.id);
-      if (exists) {
-        return prev.map((item) => (item.id === savedExp.id ? savedExp : item));
-      }
-      return [savedExp, ...prev];
-    });
-  };
+  const handleSaveExperience = () => {};
 
-  const handleSaveEducation = (savedEdu: Education) => {
-    setEducationList((prev) => {
-      const exists = prev.some((item) => item.id === savedEdu.id);
-      if (exists) {
-        return prev.map((item) => (item.id === savedEdu.id ? savedEdu : item));
-      }
-      return [savedEdu, ...prev];
-    });
-  };
+  const handleSaveEducation = () => {};
 
   // Handlers for Delete
-  const handleConfirmDeleteExperience = () => {
-    if (deletingExperience) {
-      setExperiences((prev) =>
-        prev.filter((item) => item.id !== deletingExperience.id),
-      );
-      setDeletingExperience(null);
-    }
-  };
+  const handleConfirmDeleteExperience = () => {};
 
-  const handleConfirmDeleteEducation = () => {
-    if (deletingEducation) {
-      setEducationList((prev) =>
-        prev.filter((item) => item.id !== deletingEducation.id),
-      );
-      setDeletingEducation(null);
-    }
-  };
+  const handleConfirmDeleteEducation = () => {};
 
   return (
     <div className="min-h-screen space-y-8 p-4 md:p-8 bg-slate-950 text-slate-100">
@@ -165,7 +119,7 @@ export default function ExperiencesPage() {
                   : "bg-slate-800 text-slate-400"
               }`}
             >
-              {experiences.length}
+              {professionalExperiences.length}
             </span>
           </button>
 
@@ -186,81 +140,92 @@ export default function ExperiencesPage() {
                   : "bg-slate-800 text-slate-400"
               }`}
             >
-              {educationList.length}
+              {academicExperiences.length}
             </span>
           </button>
         </div>
       </div>
 
-      {/* 3 & 4. Content Views */}
-      {activeTab === "experience" ? (
-        /* Professional Experience Tab */
-        <div className="space-y-4">
-          {filteredExperiences.length > 0 ? (
-            filteredExperiences.map((exp) => (
-              <ExperienceCard
-                key={exp.id}
-                experience={exp}
-                onEdit={handleOpenEditExperience}
-                onDelete={(expItem) => setDeletingExperience(expItem)}
-              />
-            ))
-          ) : (
-            <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-800 py-16 text-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-900 text-slate-500">
-                <Briefcase className="h-6 w-6" />
-              </div>
-              <h3 className="mt-4 text-lg font-bold text-slate-300">
-                No Experiences Found
-              </h3>
-              <p className="mt-1 text-xs text-slate-500 max-w-sm">
-                {searchQuery
-                  ? `No experience records match "${searchQuery}".`
-                  : "Get started by adding your first professional role."}
-              </p>
-              <button
-                onClick={handleOpenAddDrawer}
-                className="mt-5 rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-xs font-semibold text-slate-200 hover:bg-slate-700 transition-colors"
-              >
-                + Add Experience
-              </button>
-            </div>
-          )}
+      {isLoading ? (
+        <div className="flex h-96 flex-col items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin text-cyan-500" />
+          <p className="mt-3 text-xs text-slate-400">Loading experiences...</p>
+        </div>
+      ) : isError ? (
+        <div className="flex h-96 flex-col items-center justify-center p-4 text-center">
+          <p className="text-sm font-semibold text-rose-400">
+            Failed to load experiences
+          </p>
+          <button
+            onClick={() => refetch()}
+            className="mt-3 rounded-xl border border-rose-500/30 bg-rose-500/10 px-4 py-2 text-xs font-semibold text-rose-300 hover:bg-rose-500/20 transition-colors cursor-pointer"
+          >
+            Retry
+          </button>
         </div>
       ) : (
-        /* Academic Background Tab */
-        <div className="space-y-4">
-          {filteredEducation.length > 0 ? (
-            filteredEducation.map((edu) => (
-              <EducationCard
-                key={edu.id}
-                education={edu}
-                onEdit={handleOpenEditEducation}
-                onDelete={(eduItem) => setDeletingEducation(eduItem)}
-              />
-            ))
+        <>
+          {/* 3 & 4. Content Views */}
+          {activeTab === "experience" ? (
+            /* Professional Experience Tab */
+            <div className="space-y-4">
+              {professionalExperiences.length > 0 ? (
+                professionalExperiences.map((exp: Experience) => (
+                  <ExperienceCard
+                    key={exp._id}
+                    experience={exp}
+                    onEdit={handleOpenEditExperience}
+                    onDelete={(expItem) => setDeletingExperience(expItem)}
+                  />
+                ))
+              ) : (
+                <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-800 py-16 text-center">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-900 text-slate-500">
+                    <Briefcase className="h-6 w-6" />
+                  </div>
+                  <h3 className="mt-4 text-lg font-bold text-slate-300">
+                    No Experiences Found
+                  </h3>
+                  <button
+                    onClick={handleOpenAddDrawer}
+                    className="mt-5 rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-xs font-semibold text-slate-200 hover:bg-slate-700 transition-colors"
+                  >
+                    + Add Experience
+                  </button>
+                </div>
+              )}
+            </div>
           ) : (
-            <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-800 py-16 text-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-900 text-slate-500">
-                <GraduationCap className="h-6 w-6" />
-              </div>
-              <h3 className="mt-4 text-lg font-bold text-slate-300">
-                No Education Entries Found
-              </h3>
-              <p className="mt-1 text-xs text-slate-500 max-w-sm">
-                {searchQuery
-                  ? `No educational records match "${searchQuery}".`
-                  : "Add your academic degrees, certifications, or coursework."}
-              </p>
-              <button
-                onClick={handleOpenAddDrawer}
-                className="mt-5 rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-xs font-semibold text-slate-200 hover:bg-slate-700 transition-colors"
-              >
-                + Add Qualification
-              </button>
+            /* Academic Background Tab */
+            <div className="space-y-4">
+              {academicExperiences.length > 0 ? (
+                academicExperiences.map((edu: Education) => (
+                  <EducationCard
+                    key={edu._id}
+                    education={edu}
+                    onEdit={handleOpenEditEducation}
+                    onDelete={(eduItem) => setDeletingEducation(eduItem)}
+                  />
+                ))
+              ) : (
+                <div className="flex flex-col items-center justify-center rounded-2xl border border-dashed border-slate-800 py-16 text-center">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-900 text-slate-500">
+                    <GraduationCap className="h-6 w-6" />
+                  </div>
+                  <h3 className="mt-4 text-lg font-bold text-slate-300">
+                    No Education Entries Found
+                  </h3>
+                  <button
+                    onClick={handleOpenAddDrawer}
+                    className="mt-5 rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-xs font-semibold text-slate-200 hover:bg-slate-700 transition-colors"
+                  >
+                    + Add Qualification
+                  </button>
+                </div>
+              )}
             </div>
           )}
-        </div>
+        </>
       )}
 
       {/* 5. Add / Edit Slide-over Drawer */}
