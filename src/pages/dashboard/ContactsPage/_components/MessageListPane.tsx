@@ -129,8 +129,8 @@ export default function MessageListPane({
                 >
                   <button
                     type="button"
-                    title={isRead ? "Mark as unread" : "Mark as read"}
-                    className={`rounded p-1 transition-colors ${
+                    title={"Mark as read"}
+                    className={`cursor-pointer rounded p-1 transition-colors ${
                       isRead
                         ? "text-slate-600 hover:text-slate-400"
                         : "text-cyan-400 hover:text-cyan-300"

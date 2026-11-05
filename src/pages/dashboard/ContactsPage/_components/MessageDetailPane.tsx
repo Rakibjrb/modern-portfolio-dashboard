@@ -3,7 +3,6 @@ import {
   Inbox,
   Mail,
   Reply,
-  MailCheck,
   Send,
   ArrowLeft,
   Calendar,
@@ -113,25 +112,6 @@ export default function MessageDetailPane({
             </h2>
           </div>
         </div>
-
-        <div className="flex items-center gap-2">
-          <button
-            className="flex items-center gap-1.5 rounded-lg border border-slate-800 bg-slate-900 px-3 py-1.5 text-xs font-semibold text-slate-300 hover:bg-slate-800 hover:text-white transition-colors"
-            title={message.markAsRead ? "Mark as unread" : "Mark as read"}
-          >
-            {message.markAsRead ? (
-              <>
-                <Mail className="h-4 w-4 text-blue-400" />
-                <span>Mark Unread</span>
-              </>
-            ) : (
-              <>
-                <MailCheck className="h-4 w-4 text-cyan-400" />
-                <span>Mark Read</span>
-              </>
-            )}
-          </button>
-        </div>
       </div>
 
       {/* Message Content Scroll Area */}
@@ -240,16 +220,6 @@ export default function MessageDetailPane({
           <Reply className="h-4 w-4" />
           <span>Reply via Email</span>
         </button>
-
-        <a
-          href={`mailto:${message.email}?subject=${encodeURIComponent(
-            `Re: Contact Inquiry from ${message.name}`,
-          )}`}
-          className="flex items-center gap-1.5 rounded-xl border border-slate-700/80 bg-slate-800 px-4 py-2.5 text-xs font-semibold text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
-        >
-          <Mail className="h-4 w-4 text-cyan-400" />
-          <span>Open in Mail App</span>
-        </a>
       </div>
     </div>
   );
