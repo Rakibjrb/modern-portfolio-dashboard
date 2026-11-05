@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import {
   Briefcase,
   GraduationCap,
@@ -6,15 +6,22 @@ import {
   Plus,
   Sparkles,
 } from "lucide-react";
+import { toast } from "sonner";
 import { type Experience, type Education, type ActiveTab } from "./types";
 import ExperienceCard from "./_components/ExperienceCard";
 import EducationCard from "./_components/EducationCard";
 import ExperienceDrawer from "./_components/ExperienceDrawer";
 import DeleteConfirmModal from "./_components/DeleteConfirmModal";
-import { useGetExperienceQuery } from "../../../redux/features/experiences/experienceApi";
+import {
+  useGetExperienceQuery,
+  useCreateExperienceMutation,
+  useUpdateExperienceMutation,
+  useDeleteExperienceMutation,
+} from "../../../redux/features/experiences/experienceApi";
 
 export default function ExperiencesPage() {
   const [activeTab, setActiveTab] = useState<ActiveTab>("experience");
+
   // Drawer and Modal states
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<Experience | Education | null>(
@@ -26,15 +33,76 @@ export default function ExperiencesPage() {
     null,
   );
 
+  // Redux API Hooks
   const {
-    data: experienceData,
+    data: experienceResponse,
     isLoading,
     isError,
     refetch,
   } = useGetExperienceQuery({});
 
-  const professionalExperiences = experienceData?.data?.professional || {};
-  const academicExperiences = experienceData?.data?.academic || {};
+  const [createExperience] = useCreateExperienceMutation();
+  const [updateExperience] = useUpdateExperienceMutation();
+  const [deleteExperience] = useDeleteExperienceMutation();
+
+  // Normalize API data according to the updated Experience & Education interfaces
+  const { professionalExperiences, academicExperiences } = useMemo(() => {
+    const rawData = experienceResponse?.data || experienceResponse || {};
+
+    const rawProf = Array.isArray(rawData?.professional)
+      ? rawData.professional
+      : Array.isArray(rawData?.experiences)
+        ? rawData.experiences
+        : Array.isArray(rawData)
+          ? rawData.filter((i: any) => i.responsibilities || i.type)
+          : [];
+
+    const rawAcad = Array.isArray(rawData?.academic)
+      ? rawData.academic
+      : Array.isArray(rawData?.education)
+        ? rawData.education
+        : Array.isArray(rawData)
+          ? rawData.filter((i: any) => i.degree || i.fieldOfStudy)
+          : [];
+
+    const normalizedProf: Experience[] = rawProf.map((item: any) => ({
+      _id: item._id || item.id || `exp-${Date.now()}`,
+      title: item.title || "",
+      organization: item.organization || item.company || "",
+      description: item.description || "",
+      startDate: item.startDate || "",
+      endDate: item.endDate || "Present",
+      responsibilities: Array.isArray(item.responsibilities)
+        ? item.responsibilities
+        : [],
+      achievements: Array.isArray(item.achievements) ? item.achievements : [],
+      location: item.location || "",
+      type: item.type || "Full-time",
+    }));
+
+    const normalizedAcad: Education[] = rawAcad.map((item: any) => ({
+      _id: item._id || item.id || `edu-${Date.now()}`,
+      title: item.title || item.degree || "",
+      organization: item.organization || item.institution || "",
+      description: item.description || "",
+      startDate: item.startDate || "",
+      endDate: item.endDate || "Present",
+      degree: item.degree || "",
+      fieldOfStudy: item.fieldOfStudy || "",
+      result: item.result || "",
+      location: item.location || "",
+    }));
+
+    return {
+      professionalExperiences: normalizedProf,
+      academicExperiences: normalizedAcad,
+    };
+  }, [experienceResponse]);
+
+  console.log(experienceResponse, {
+    professionalExperiences,
+    academicExperiences,
+  });
 
   // Handlers for Add / Edit
   const handleOpenAddDrawer = () => {
@@ -52,14 +120,61 @@ export default function ExperiencesPage() {
     setIsDrawerOpen(true);
   };
 
-  const handleSaveExperience = () => {};
+  const handleSaveExperience = async (exp: Partial<Experience>) => {
+    try {
+      if (exp._id && !exp._id.startsWith("exp-")) {
+        await updateExperience({
+          id: exp._id,
+          data: { professional: [exp] },
+        }).unwrap();
+        toast.success("Experience updated successfully");
+      } else {
+        await createExperience(exp).unwrap();
+        toast.success("Experience added successfully");
+      }
+      setIsDrawerOpen(false);
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Failed to save experience");
+    }
+  };
 
-  const handleSaveEducation = () => {};
+  const handleSaveEducation = async (edu: Partial<Education>) => {
+    try {
+      if (edu._id && !edu._id.startsWith("edu-")) {
+        await updateExperience({ id: edu._id, data: edu }).unwrap();
+        toast.success("Education qualification updated successfully");
+      } else {
+        await createExperience(edu).unwrap();
+        toast.success("Education qualification added successfully");
+      }
+      setIsDrawerOpen(false);
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Failed to save education entry");
+    }
+  };
 
   // Handlers for Delete
-  const handleConfirmDeleteExperience = () => {};
+  const handleConfirmDeleteExperience = async () => {
+    if (!deletingExperience?._id) return;
+    try {
+      await deleteExperience(deletingExperience._id).unwrap();
+      toast.success("Experience deleted successfully");
+      setDeletingExperience(null);
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Failed to delete experience");
+    }
+  };
 
-  const handleConfirmDeleteEducation = () => {};
+  const handleConfirmDeleteEducation = async () => {
+    if (!deletingEducation?._id) return;
+    try {
+      await deleteExperience(deletingEducation._id).unwrap();
+      toast.success("Education entry deleted successfully");
+      setDeletingEducation(null);
+    } catch (err: any) {
+      toast.error(err?.data?.message || "Failed to delete education entry");
+    }
+  };
 
   return (
     <div className="min-h-screen space-y-8 p-4 md:p-8 bg-slate-950 text-slate-100">
@@ -83,7 +198,7 @@ export default function ExperiencesPage() {
         {/* Dynamic Action Button */}
         <button
           onClick={handleOpenAddDrawer}
-          className={`flex items-center justify-center gap-2.5 rounded-xl px-5 py-3 text-sm font-bold text-slate-950 shadow-xl transition-all ${
+          className={`cursor-pointer flex items-center justify-center gap-2.5 rounded-xl px-5 py-3 text-sm font-bold text-slate-950 shadow-xl transition-all ${
             activeTab === "experience"
               ? "bg-gradient-to-r from-cyan-400 to-blue-500 hover:from-cyan-300 hover:to-blue-400 shadow-cyan-500/20"
               : "bg-gradient-to-r from-purple-400 to-indigo-500 hover:from-purple-300 hover:to-indigo-400 shadow-purple-500/20"
@@ -92,19 +207,18 @@ export default function ExperiencesPage() {
           <Plus className="h-4 w-4 stroke-[3]" />
           <span>
             {activeTab === "experience"
-              ? "+ Add Professional Experience"
-              : "+ Add Academic Qualification"}
+              ? " Add Professional Experience"
+              : " Add Academic Qualification"}
           </span>
         </button>
       </div>
 
-      {/* 2. Navigation Tabs & Search Controls */}
+      {/* 2. Navigation Tabs Switcher */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-b border-slate-800/80 pb-4">
-        {/* Tabbed Navigation Switcher */}
         <div className="inline-flex rounded-xl bg-slate-900/90 p-1.5 border border-slate-800">
           <button
             onClick={() => setActiveTab("experience")}
-            className={`flex items-center gap-2.5 rounded-lg px-4 py-2 text-sm font-bold transition-all ${
+            className={`flex items-center gap-2.5 rounded-lg px-4 py-2 text-sm font-bold transition-all cursor-pointer ${
               activeTab === "experience"
                 ? "bg-slate-800 text-cyan-400 shadow-md border border-slate-700/80"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
@@ -125,7 +239,7 @@ export default function ExperiencesPage() {
 
           <button
             onClick={() => setActiveTab("education")}
-            className={`flex items-center gap-2.5 rounded-lg px-4 py-2 text-sm font-bold transition-all ${
+            className={`flex items-center gap-2.5 rounded-lg px-4 py-2 text-sm font-bold transition-all cursor-pointer ${
               activeTab === "education"
                 ? "bg-slate-800 text-purple-400 shadow-md border border-slate-700/80"
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800/50"
@@ -165,7 +279,7 @@ export default function ExperiencesPage() {
         </div>
       ) : (
         <>
-          {/* 3 & 4. Content Views */}
+          {/* Content Views */}
           {activeTab === "experience" ? (
             /* Professional Experience Tab */
             <div className="space-y-4">
@@ -188,9 +302,9 @@ export default function ExperiencesPage() {
                   </h3>
                   <button
                     onClick={handleOpenAddDrawer}
-                    className="mt-5 rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-xs font-semibold text-slate-200 hover:bg-slate-700 transition-colors"
+                    className="cursor-pointer mt-5 rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-xs font-semibold text-slate-200 hover:bg-slate-700 transition-colors"
                   >
-                    + Add Experience
+                    Add Experience
                   </button>
                 </div>
               )}
@@ -217,9 +331,9 @@ export default function ExperiencesPage() {
                   </h3>
                   <button
                     onClick={handleOpenAddDrawer}
-                    className="mt-5 rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-xs font-semibold text-slate-200 hover:bg-slate-700 transition-colors"
+                    className="cursor-pointer mt-5 rounded-xl border border-slate-700 bg-slate-800 px-4 py-2 text-xs font-semibold text-slate-200 hover:bg-slate-700 transition-colors"
                   >
-                    + Add Qualification
+                    Add Qualification
                   </button>
                 </div>
               )}
@@ -244,7 +358,7 @@ export default function ExperiencesPage() {
         title="Delete Professional Experience"
         itemTitle={
           deletingExperience
-            ? `${deletingExperience.title} at ${deletingExperience.company}`
+            ? `${deletingExperience.title} at ${deletingExperience.organization}`
             : ""
         }
         onClose={() => setDeletingExperience(null)}
@@ -256,7 +370,7 @@ export default function ExperiencesPage() {
         title="Delete Academic Qualification"
         itemTitle={
           deletingEducation
-            ? `${deletingEducation.degree} (${deletingEducation.institution})`
+            ? `${deletingEducation.degree || deletingEducation.title} (${deletingEducation.organization})`
             : ""
         }
         onClose={() => setDeletingEducation(null)}

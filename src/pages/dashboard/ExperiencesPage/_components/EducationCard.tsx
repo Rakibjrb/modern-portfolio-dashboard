@@ -8,13 +8,24 @@ interface EducationCardProps {
 }
 
 export default function EducationCard({ education, onEdit, onDelete }: EducationCardProps) {
-  const formatDate = (dateStr?: string) => {
-    if (!dateStr) return '';
-    const [year, month] = dateStr.split('-');
-    if (!month) return year;
-    const date = new Date(parseInt(year), parseInt(month) - 1);
-    return date.toLocaleString('default', { month: 'short', year: 'numeric' });
+  const formatDate = (dateVal?: string | Date) => {
+    if (!dateVal) return '';
+    try {
+      const dateStr = typeof dateVal === 'string' ? dateVal : dateVal.toISOString();
+      if (dateStr.includes('T')) {
+        const d = new Date(dateStr);
+        return d.toLocaleString('default', { month: 'short', year: 'numeric' });
+      }
+      const [year, month] = dateStr.split('-');
+      if (!month) return year;
+      const d = new Date(parseInt(year), parseInt(month) - 1);
+      return d.toLocaleString('default', { month: 'short', year: 'numeric' });
+    } catch {
+      return String(dateVal);
+    }
   };
+
+  const isCurrent = !education.endDate || String(education.endDate).toLowerCase() === 'present';
 
   return (
     <div className="group relative rounded-2xl border border-slate-800 bg-slate-900/80 p-5 md:p-6 shadow-xl backdrop-blur-xl transition-all duration-300 hover:border-slate-700/80 hover:shadow-2xl hover:shadow-purple-500/5">
@@ -29,7 +40,7 @@ export default function EducationCard({ education, onEdit, onDelete }: Education
           <div>
             <div className="flex flex-wrap items-center gap-2">
               <h3 className="text-lg font-bold text-slate-100 group-hover:text-purple-300 transition-colors">
-                {education.degree} in {education.fieldOfStudy}
+                {education.title || `${education.degree} in ${education.fieldOfStudy}`}
               </h3>
               {education.result && (
                 <span className="inline-flex items-center gap-1 rounded-full border border-purple-500/30 bg-purple-500/10 px-2.5 py-0.5 text-xs font-semibold text-purple-300">
@@ -37,10 +48,24 @@ export default function EducationCard({ education, onEdit, onDelete }: Education
                   {education.result}
                 </span>
               )}
+              {isCurrent && (
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-purple-500/30 bg-purple-500/10 px-2.5 py-0.5 text-xs font-medium text-purple-400">
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-purple-400 opacity-75"></span>
+                    <span className="relative inline-flex h-2 w-2 rounded-full bg-purple-500"></span>
+                  </span>
+                  Present
+                </span>
+              )}
             </div>
 
             <p className="mt-1 text-base font-semibold text-slate-300">
-              {education.institution}
+              {education.organization}
+              {education.degree && education.title && education.title !== education.degree && (
+                <span className="ml-2 text-xs font-normal text-slate-400">
+                  ({education.degree}{education.fieldOfStudy ? ` • ${education.fieldOfStudy}` : ''})
+                </span>
+              )}
             </p>
 
             {/* Meta Row */}
@@ -48,13 +73,15 @@ export default function EducationCard({ education, onEdit, onDelete }: Education
               <div className="flex items-center gap-1.5">
                 <Calendar className="h-3.5 w-3.5 text-slate-500" />
                 <span>
-                  {formatDate(education.startDate)} – {education.isCurrent ? 'Present' : formatDate(education.endDate)}
+                  {formatDate(education.startDate)} – {isCurrent ? 'Present' : formatDate(education.endDate)}
                 </span>
               </div>
-              <div className="flex items-center gap-1.5">
-                <MapPin className="h-3.5 w-3.5 text-slate-500" />
-                <span>{education.location}</span>
-              </div>
+              {education.location && (
+                <div className="flex items-center gap-1.5">
+                  <MapPin className="h-3.5 w-3.5 text-slate-500" />
+                  <span>{education.location}</span>
+                </div>
+              )}
             </div>
 
             {/* Optional Description */}
@@ -70,14 +97,14 @@ export default function EducationCard({ education, onEdit, onDelete }: Education
         <div className="flex items-center gap-2 self-end sm:self-start">
           <button
             onClick={() => onEdit(education)}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-700/80 bg-slate-800/80 text-slate-300 hover:border-purple-500/50 hover:bg-purple-500/10 hover:text-purple-400 transition-all shadow-sm"
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-700/80 bg-slate-800/80 text-slate-300 hover:border-purple-500/50 hover:bg-purple-500/10 hover:text-purple-400 transition-all shadow-sm cursor-pointer"
             title="Edit Education"
           >
             <Edit3 className="h-4 w-4" />
           </button>
           <button
             onClick={() => onDelete(education)}
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-700/80 bg-slate-800/80 text-slate-300 hover:border-rose-500/50 hover:bg-rose-500/10 hover:text-rose-400 transition-all shadow-sm"
+            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-700/80 bg-slate-800/80 text-slate-300 hover:border-rose-500/50 hover:bg-rose-500/10 hover:text-rose-400 transition-all shadow-sm cursor-pointer"
             title="Delete Education"
           >
             <Trash2 className="h-4 w-4" />
