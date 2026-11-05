@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Mail, Search, Loader2 } from "lucide-react";
+import { Mail, Search, Loader2, RotateCw } from "lucide-react";
 import { type ContactMessage, type MessageFilter } from "./types";
 import MessageListPane from "./_components/MessageListPane";
 import MessageDetailPane from "./_components/MessageDetailPane";
@@ -142,8 +142,14 @@ export default function ContactsPage() {
             />
           </div>
 
-          {/* Filter Pills */}
+          {/* Reload & Filter Pills */}
           <div className="flex items-center gap-1.5 rounded-xl bg-slate-900/90 p-1 border border-slate-800">
+            <button
+              onClick={() => refetch()}
+              className="rounded-lg px-3 py-1.5 font-semibold transition-all cursor-pointer"
+            >
+              <RotateCw className="w-5 h-5 hover:text-cyan-500" />
+            </button>
             <button
               onClick={() => setFilter("")}
               className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition-all cursor-pointer ${
