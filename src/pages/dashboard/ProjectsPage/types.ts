@@ -1,8 +1,8 @@
-export type ProjectCategory = 'Full-Stack' | 'Frontend' | 'Backend' | 'Automation';
+import { type Meta as CommonMeta } from "../../../types/common.types";
 
-export type ViewMode = 'grid' | 'table';
+export type Meta = CommonMeta;
 
-export type SortOption = 'latest' | 'order' | 'title-asc' | 'title-desc';
+export type ProjectCategory = "MERN" | "Frontend" | "Pending" | "Unique";
 
 export interface Project {
   id: string;
@@ -12,10 +12,12 @@ export interface Project {
   shortDescription: string;
   fullDescription: string;
   thumbnail: string;
-  techStack: string[];
-  liveUrl?: string;
-  githubClientUrl?: string;
-  githubServerUrl?: string;
+  technologies: string[];
+  url: {
+    live: string;
+    githubClient?: string | undefined;
+    githubServer?: string | undefined;
+  };
   featured: boolean;
   order: number;
   createdAt: string;

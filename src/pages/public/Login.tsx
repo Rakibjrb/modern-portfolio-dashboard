@@ -27,8 +27,8 @@ export default function Login() {
 
       // Store tokens and user data in Redux
       // eslint-disable-next-line no-unsafe-optional-chaining
-      const { user, accessToken, refreshToken } = res?.data;
-      dispatch(setUser({ user, token: accessToken, refreshToken }));
+      const { user, accessToken } = res?.data;
+      dispatch(setUser({ user, accessToken }));
 
       // Show success toast immediately
       toast.success("Login successful!", {

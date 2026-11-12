@@ -2,8 +2,8 @@ import { Layout, Menu } from "antd";
 import { Calendar, ChevronLeft, ChevronRight, GraduationCap, LayoutDashboard, LogOut, Mail, Settings } from "lucide-react";
 import { Link, useLocation } from "react-router";
 import { useLogoutMutation } from "../../redux/features/auth/authApis";
-import { useAppDispatch, useAppSelector } from "../../redux/hooks";
-import { logout, useCurrentRefreshToken } from "../../redux/features/auth/authSlice";
+import { useAppDispatch } from "../../redux/hooks";
+import { logout } from "../../redux/features/auth/authSlice";
 import { toast } from "sonner";
 
 const { Sider } = Layout;
@@ -33,13 +33,12 @@ const sidebarItems = [
 
 export default function Sidebar({ minimizeSidebar, setMinimizeSidebar, openKeys, onOpenChange }: { minimizeSidebar: boolean, setMinimizeSidebar: (value: boolean) => void, openKeys: string[], onOpenChange: (keys: string[]) => void }) {
     const location = useLocation();
-    const refreshToken = useAppSelector(useCurrentRefreshToken);
     const dispatch = useAppDispatch();
     const [apiLogout] = useLogoutMutation();
 
     const handleLogout = async () => {
         try {
-            await apiLogout({ refreshToken }).unwrap();
+            await apiLogout({ refreshToken: "" }).unwrap();
         } catch (error: any) {
             toast.error(error?.data?.message || "Something went wrong")
         } finally {

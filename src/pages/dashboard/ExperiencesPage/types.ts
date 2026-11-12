@@ -1,32 +1,34 @@
-export type EmploymentType = 'Full-time' | 'Part-time' | 'Contract' | 'Internship' | 'Freelance';
+export type EmploymentType =
+  | "Full-time"
+  | "Part-time"
+  | "Contract"
+  | "Internship"
+  | "Freelance";
 
 export interface Experience {
-  id: string;
   title: string;
-  company: string;
-  companyLogo?: string;
-  location: string;
-  type: EmploymentType;
-  startDate: string;
-  endDate?: string;
-  isCurrent: boolean;
+  organization: string;
+  description: string;
+  startDate: string | Date;
+  endDate: string | Date;
   responsibilities: string[];
   achievements: string[];
-  order: number;
+  location: string;
+  type: string;
+  _id: string;
 }
 
 export interface Education {
-  id: string;
+  title: string;
+  organization: string;
+  description: string;
+  startDate: string | Date;
+  endDate: string | Date;
   degree: string;
   fieldOfStudy: string;
-  institution: string;
   result: string;
   location: string;
-  startDate: string;
-  endDate?: string;
-  isCurrent: boolean;
-  description?: string;
-  order: number;
+  _id: string;
 }
 
-export type ActiveTab = 'experience' | 'education';
+export type ActiveTab = "experience" | "education";
