@@ -59,7 +59,9 @@ const baseQueryWithRefreshToken = async (
         result = await baseQuery(arg, api, extraOptions);
       } else {
         // Refresh failed, logout user
-        api.dispatch(logout());
+        setTimeout(() => {
+          api.dispatch(logout());
+        }, 1000);
       }
     } catch (error) {
       console.error("Token refresh failed:", error);
