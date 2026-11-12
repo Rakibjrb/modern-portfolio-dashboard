@@ -99,11 +99,6 @@ export default function ExperiencesPage() {
     };
   }, [experienceResponse]);
 
-  console.log(experienceResponse, {
-    professionalExperiences,
-    academicExperiences,
-  });
-
   // Handlers for Add / Edit
   const handleOpenAddDrawer = () => {
     setEditingItem(null);
@@ -124,12 +119,13 @@ export default function ExperiencesPage() {
     try {
       if (exp._id && !exp._id.startsWith("exp-")) {
         await updateExperience({
+          data: exp,
           id: exp._id,
-          data: { professional: [exp] },
+          type: "professional",
         }).unwrap();
         toast.success("Experience updated successfully");
       } else {
-        await createExperience(exp).unwrap();
+        await createExperience({ data: exp, type: "professional" }).unwrap();
         toast.success("Experience added successfully");
       }
       setIsDrawerOpen(false);
@@ -139,12 +135,13 @@ export default function ExperiencesPage() {
   };
 
   const handleSaveEducation = async (edu: Partial<Education>) => {
+    console.log(edu);
     try {
       if (edu._id && !edu._id.startsWith("edu-")) {
         await updateExperience({ id: edu._id, data: edu }).unwrap();
         toast.success("Education qualification updated successfully");
       } else {
-        await createExperience(edu).unwrap();
+        await createExperience({ data: edu }).unwrap();
         toast.success("Education qualification added successfully");
       }
       setIsDrawerOpen(false);
@@ -157,7 +154,10 @@ export default function ExperiencesPage() {
   const handleConfirmDeleteExperience = async () => {
     if (!deletingExperience?._id) return;
     try {
-      await deleteExperience(deletingExperience._id).unwrap();
+      await deleteExperience({
+        id: deletingExperience._id,
+        type: "professional",
+      }).unwrap();
       toast.success("Experience deleted successfully");
       setDeletingExperience(null);
     } catch (err: any) {
@@ -168,7 +168,7 @@ export default function ExperiencesPage() {
   const handleConfirmDeleteEducation = async () => {
     if (!deletingEducation?._id) return;
     try {
-      await deleteExperience(deletingEducation._id).unwrap();
+      await deleteExperience({ id: deletingEducation._id }).unwrap();
       toast.success("Education entry deleted successfully");
       setDeletingEducation(null);
     } catch (err: any) {

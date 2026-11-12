@@ -65,8 +65,6 @@ export default function ExperienceCard({
     !experience.endDate ||
     String(experience.endDate).toLowerCase() === "present";
 
-  console.log(experience._id);
-
   return (
     <div className="group relative rounded-2xl border border-slate-800 bg-slate-900/80 p-5 md:p-6 shadow-xl backdrop-blur-xl transition-all duration-300 hover:border-slate-700/80 hover:shadow-2xl hover:shadow-cyan-500/5">
       {/* Top Bar / Header */}

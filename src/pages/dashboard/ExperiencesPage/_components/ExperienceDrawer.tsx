@@ -174,7 +174,7 @@ export default function ExperienceDrawer({
         location: data.location,
         type: data.type,
         startDate: data.startDate,
-        endDate: data.isCurrentExp ? "Present" : data.endDate,
+        endDate: data.isCurrentExp ? new Date() : data.endDate,
         description: data.description,
         responsibilities: data.responsibilities
           .map((r) => r.value.trim())
@@ -199,7 +199,6 @@ export default function ExperienceDrawer({
       };
       onSaveEducation(eduData);
     }
-    onClose();
   };
 
   return (
@@ -385,11 +384,7 @@ export default function ExperienceDrawer({
                             control={control}
                             rules={{ required: true }}
                             render={({ field }) => (
-                              <Input
-                                {...field}
-                                type="month"
-                                size="large"
-                              />
+                              <Input {...field} type="month" size="large" />
                             )}
                           />
                         </div>
@@ -431,7 +426,10 @@ export default function ExperienceDrawer({
                       </div>
                       <div className="space-y-2.5">
                         {responsibilityFields.map((item, idx) => (
-                          <div key={item.id} className="flex items-center gap-2">
+                          <div
+                            key={item.id}
+                            className="flex items-center gap-2"
+                          >
                             <Controller
                               name={`responsibilities.${idx}.value`}
                               control={control}
@@ -473,7 +471,10 @@ export default function ExperienceDrawer({
                       </div>
                       <div className="space-y-2.5">
                         {achievementFields.map((item, idx) => (
-                          <div key={item.id} className="flex items-center gap-2">
+                          <div
+                            key={item.id}
+                            className="flex items-center gap-2"
+                          >
                             <Controller
                               name={`achievements.${idx}.value`}
                               control={control}
@@ -639,11 +640,7 @@ export default function ExperienceDrawer({
                             control={control}
                             rules={{ required: true }}
                             render={({ field }) => (
-                              <Input
-                                {...field}
-                                type="month"
-                                size="large"
-                              />
+                              <Input {...field} type="month" size="large" />
                             )}
                           />
                         </div>
