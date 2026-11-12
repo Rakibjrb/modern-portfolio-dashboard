@@ -9,7 +9,7 @@ interface ProjectFilterBarProps {
   onSortChange: (sort: string) => void;
 }
 
-const CATEGORIES = ["", "MERN", "Frontend", "Backend", "Automation"];
+const CATEGORIES = ["", "MERN", "Frontend", "UNIQUE", "PENDING"];
 
 export function ProjectFilterBar({
   onSearchChange,
