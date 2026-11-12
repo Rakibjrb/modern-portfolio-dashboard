@@ -2,7 +2,7 @@ import { type Meta as CommonMeta } from "../../../types/common.types";
 
 export type Meta = CommonMeta;
 
-export type ProjectCategory = "MERN" | "Frontend" | "Backend" | "Automation";
+export type ProjectCategory = "MERN" | "Frontend" | "Pending" | "Unique";
 
 export interface Project {
   id: string;

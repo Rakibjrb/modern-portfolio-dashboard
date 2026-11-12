@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { X, Upload, Plus, Trash2, Star, Globe, Check } from "lucide-react";
+import { X, Plus, Trash2, Star, Globe, Check } from "lucide-react";
 import { type Project, type ProjectCategory } from "../types";
+import UploadImage from "../../../../components/common/UploadImage";
 
 interface ProjectDrawerProps {
   isOpen: boolean;
@@ -9,12 +10,7 @@ interface ProjectDrawerProps {
   onSave: (project: Partial<Project>) => void;
 }
 
-const CATEGORIES: ProjectCategory[] = [
-  "MERN",
-  "Frontend",
-  "Backend",
-  "Automation",
-];
+const CATEGORIES: ProjectCategory[] = ["MERN", "Frontend", "Pending", "Unique"];
 
 export function ProjectDrawer({
   isOpen,
@@ -57,9 +53,7 @@ export function ProjectDrawer({
       setCategory("MERN");
       setShortDescription("");
       setFullDescription("");
-      setThumbnail(
-        "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop",
-      );
+      setThumbnail("");
       setTechnologies(["React", "TypeScript", "Tailwind CSS"]);
       setLive("");
       setGithubClient("");
@@ -245,37 +239,10 @@ export function ProjectDrawer({
             </div>
 
             {/* Thumbnail Upload Zone & URL */}
-            <div>
-              <label className="block text-xs font-semibold text-slate-300">
-                Thumbnail Image
-              </label>
-              <div className="mt-1.5 flex flex-col gap-3 sm:flex-row sm:items-center">
-                {thumbnail && (
-                  <div className="relative h-20 w-32 overflow-hidden rounded-xl border border-slate-700 bg-slate-950">
-                    <img
-                      src={thumbnail}
-                      alt="Thumbnail preview"
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                )}
-                <div className="flex-1">
-                  <div className="flex rounded-xl border border-slate-800 bg-slate-950 p-4 border-dashed text-center flex-col items-center justify-center">
-                    <Upload className="h-5 w-5 text-indigo-400" />
-                    <p className="mt-1 text-xs text-slate-300">
-                      Drag & drop cover image, or paste Image URL below
-                    </p>
-                    <input
-                      type="text"
-                      value={thumbnail}
-                      onChange={(e) => setThumbnail(e.target.value)}
-                      placeholder="https://images.unsplash.com/..."
-                      className="mt-2 w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:border-indigo-500 focus:outline-none"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
+            <UploadImage
+              thumbnail={thumbnail}
+              setThumbnail={(link) => setThumbnail(link)}
+            />
 
             {/* Tech Stack Tags Input */}
             <div>
