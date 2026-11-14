@@ -9,7 +9,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
+  // const [rememberMe, setRememberMe] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -19,7 +19,6 @@ export default function Login() {
     e.preventDefault();
 
     try {
-
       const res = await login({
         email,
         password,
@@ -54,7 +53,6 @@ export default function Login() {
     <div className="min-h-screen w-full flex items-center justify-center bg-slate-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.25),rgba(255,255,255,0))] p-4 font-sans text-slate-100">
       {/* Container Card */}
       <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900/80 p-8 shadow-2xl backdrop-blur-xl transition-all duration-300 hover:border-slate-700/80">
-
         {/* Header */}
         <div className="mb-8 text-center">
           <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-500 shadow-lg shadow-indigo-500/30">
@@ -197,7 +195,7 @@ export default function Login() {
           </div>
 
           {/* Options */}
-          <div className="flex items-center justify-between text-sm">
+          {/* <div className="flex items-center justify-between text-sm">
             <label className="flex items-center space-x-2.5 cursor-pointer">
               <input
                 type="checkbox"
@@ -213,7 +211,7 @@ export default function Login() {
             >
               Forgot password?
             </a>
-          </div>
+          </div> */}
 
           {/* Submit Button */}
           <button
