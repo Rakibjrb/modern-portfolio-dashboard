@@ -2,8 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     user: null,
-    token: null,
-    refreshToken: null,
+    accessToken: null,
 };
 
 const authSlice = createSlice({
@@ -11,20 +10,17 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         setUser: (state, action) => {
-            const { user, token, refreshToken } = action.payload;
+            const { user, accessToken } = action.payload;
             state.user = user;
-            state.token = token;
-            state.refreshToken = refreshToken;
+            state.accessToken = accessToken;
         },
         setTokens: (state, action) => {
-            const { token, refreshToken } = action.payload;
-            state.token = token;
-            state.refreshToken = refreshToken;
+            const { accessToken } = action.payload;
+            state.accessToken = accessToken;
         },
         logout: (state) => {
             state.user = null;
-            state.token = null;
-            state.refreshToken = null;
+            state.accessToken = null;
         },
     },
 });
@@ -33,7 +29,6 @@ export const { setUser, setTokens, logout } = authSlice.actions;
 export default authSlice.reducer;
 
 // Selectors
-export const useCurrentToken = (state: any) => state.auth.token;
-export const useCurrentRefreshToken = (state: any) => state.auth.refreshToken;
+export const useCurrentToken = (state: any) => state.auth.accessToken;
 export const selectCurrentUser = (state: any) => state.auth.user;
-export const selectIsAuthenticated = (state: any) => !!state.auth.token;
+export const selectIsAuthenticated = (state: any) => !!state.auth.accessToken;

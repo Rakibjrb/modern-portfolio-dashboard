@@ -9,58 +9,65 @@ import ProjectsPage from "../pages/dashboard/ProjectsPage/ProjectsPage";
 import ExperiencesPage from "../pages/dashboard/ExperiencesPage/ExperiencesPage";
 import ContactsPage from "../pages/dashboard/ContactsPage/ContactsPage";
 import PublicRoute from "./Public.routes";
+import AboutPage from "../pages/dashboard/AboutPage/AboutPage";
 
 const router = createBrowserRouter([
-    {
-        path: "/",
-        element: <Navigate to="/login" replace />,
-    },
-    {
+  {
+    path: "/",
+    element: <Navigate to="/login" replace />,
+  },
+  {
+    path: "/dashboard",
+    element: (
+      <ProtectedRoute allowedRoles={["super_admin"]}>
+        <App />
+      </ProtectedRoute>
+    ),
+
+    //protected dashboard routes here
+    children: [
+      {
         path: "/dashboard",
-        element: (
-            <ProtectedRoute allowedRoles={["super_admin",]}>
-                <App />
-            </ProtectedRoute>
-        ),
+        element: <DashboardPage />,
+      },
+      {
+        path: "/dashboard/projects",
+        element: <ProjectsPage />,
+      },
+      {
+        path: "/dashboard/experiences",
+        element: <ExperiencesPage />,
+      },
+      {
+        path: "/dashboard/contacts",
+        element: <ContactsPage />,
+      },
+      {
+        path: "/dashboard/about",
+        element: <AboutPage />,
+      },
+    ],
+  },
+  {
+    path: "/login",
+    element: (
+      <PublicRoute>
+        <Login />
+      </PublicRoute>
+    ),
+  },
 
-        //protected dashboard routes here
-        children: [
-            {
-                path: "/dashboard",
-                element: <DashboardPage />,
-            },
-            {
-                path: "/dashboard/projects",
-                element: <ProjectsPage />,
-            },
-            {
-                path: "/dashboard/experiences",
-                element: <ExperiencesPage />,
-            },
-            {
-                path: "/dashboard/contacts",
-                element: <ContactsPage />,
-            },
-        ],
-    },
-    {
-        path: "/login",
-        element: <PublicRoute>
-            <Login />
-        </PublicRoute>,
-    },
+  // unauthorized page
+  {
+    path: "/unauthorized",
+    element: <Unauthorized />,
+  },
 
-    // unauthorized page
-    {
-        path: "/unauthorized",
-        element: <Unauthorized />,
-    },
-
-    // not found page
-    {
-        path: "*",
-        element: <NotFoundPage />,
-    },
+  // not found page
+  {
+    path: "*",
+    element: <NotFoundPage />,
+  },
 ]);
 
 export default router;

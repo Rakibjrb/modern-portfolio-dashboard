@@ -1,16 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import {
-  X,
-  Upload,
-  Plus,
-  Trash2,
-  Eye,
-  Edit3,
-  Star,
-  Globe,
-  Check,
-} from 'lucide-react';
-import { type Project, type ProjectCategory } from '../types';
+import React, { useState, useEffect } from "react";
+import { X, Plus, Trash2, Star, Globe, Check } from "lucide-react";
+import { type Project, type ProjectCategory } from "../types";
+import UploadImage from "../../../../components/common/UploadImage";
 
 interface ProjectDrawerProps {
   isOpen: boolean;
@@ -19,12 +10,7 @@ interface ProjectDrawerProps {
   onSave: (project: Partial<Project>) => void;
 }
 
-const CATEGORIES: ProjectCategory[] = [
-  'Full-Stack',
-  'Frontend',
-  'Backend',
-  'Automation',
-];
+const CATEGORIES: ProjectCategory[] = ["MERN", "Frontend", "Pending", "Unique"];
 
 export function ProjectDrawer({
   isOpen,
@@ -32,20 +18,19 @@ export function ProjectDrawer({
   projectToEdit,
   onSave,
 }: ProjectDrawerProps) {
-  const [title, setTitle] = useState('');
-  const [slug, setSlug] = useState('');
-  const [category, setCategory] = useState<ProjectCategory>('Full-Stack');
-  const [shortDescription, setShortDescription] = useState('');
-  const [fullDescription, setFullDescription] = useState('');
-  const [thumbnail, setThumbnail] = useState('');
-  const [techStack, setTechStack] = useState<string[]>([]);
-  const [tagInput, setTagInput] = useState('');
-  const [liveUrl, setLiveUrl] = useState('');
-  const [githubClientUrl, setGithubClientUrl] = useState('');
-  const [githubServerUrl, setGithubServerUrl] = useState('');
+  const [title, setTitle] = useState("");
+  const [slug, setSlug] = useState("");
+  const [category, setCategory] = useState<ProjectCategory>("MERN");
+  const [shortDescription, setShortDescription] = useState("");
+  const [fullDescription, setFullDescription] = useState("");
+  const [thumbnail, setThumbnail] = useState("");
+  const [technologies, setTechnologies] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState("");
+  const [live, setLive] = useState("");
+  const [githubClient, setGithubClient] = useState("");
+  const [githubServer, setGithubServer] = useState("");
   const [featured, setFeatured] = useState(false);
   const [order, setOrder] = useState<number>(1);
-  const [editorTab, setEditorTab] = useState<'write' | 'preview'>('write');
 
   // Populate drawer form when editing or resetting for create
   useEffect(() => {
@@ -56,25 +41,23 @@ export function ProjectDrawer({
       setShortDescription(projectToEdit.shortDescription);
       setFullDescription(projectToEdit.fullDescription);
       setThumbnail(projectToEdit.thumbnail);
-      setTechStack(projectToEdit.techStack);
-      setLiveUrl(projectToEdit.liveUrl || '');
-      setGithubClientUrl(projectToEdit.githubClientUrl || '');
-      setGithubServerUrl(projectToEdit.githubServerUrl || '');
+      setTechnologies(projectToEdit.technologies);
+      setLive(projectToEdit.url.live || "");
+      setGithubClient(projectToEdit.url.githubClient || "");
+      setGithubServer(projectToEdit.url.githubServer || "");
       setFeatured(projectToEdit.featured);
       setOrder(projectToEdit.order);
     } else {
-      setTitle('');
-      setSlug('');
-      setCategory('Full-Stack');
-      setShortDescription('');
-      setFullDescription('');
-      setThumbnail(
-        'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800&auto=format&fit=crop'
-      );
-      setTechStack(['React', 'TypeScript', 'Tailwind CSS']);
-      setLiveUrl('');
-      setGithubClientUrl('');
-      setGithubServerUrl('');
+      setTitle("");
+      setSlug("");
+      setCategory("MERN");
+      setShortDescription("");
+      setFullDescription("");
+      setThumbnail("");
+      setTechnologies(["React", "TypeScript", "Tailwind CSS"]);
+      setLive("");
+      setGithubClient("");
+      setGithubServer("");
       setFeatured(false);
       setOrder(1);
     }
@@ -88,21 +71,21 @@ export function ProjectDrawer({
       setSlug(
         val
           .toLowerCase()
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/(^-|-$)+/g, '')
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/(^-|-$)+/g, ""),
       );
     }
   };
 
   const handleAddTag = () => {
-    if (tagInput.trim() && !techStack.includes(tagInput.trim())) {
-      setTechStack([...techStack, tagInput.trim()]);
-      setTagInput('');
+    if (tagInput.trim() && !technologies.includes(tagInput.trim())) {
+      setTechnologies([...technologies, tagInput.trim()]);
+      setTagInput("");
     }
   };
 
   const handleRemoveTag = (tag: string) => {
-    setTechStack(techStack.filter((t) => t !== tag));
+    setTechnologies(technologies.filter((t) => t !== tag));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -111,18 +94,19 @@ export function ProjectDrawer({
       id: projectToEdit?.id,
       title,
       slug,
-      category,
+      category: category.toLowerCase() as ProjectCategory,
       shortDescription,
       fullDescription,
       thumbnail,
-      techStack,
-      liveUrl: liveUrl || undefined,
-      githubClientUrl: githubClientUrl || undefined,
-      githubServerUrl: githubServerUrl || undefined,
+      technologies: technologies,
+      url: {
+        live: live,
+        githubClient: githubClient || undefined,
+        githubServer: githubServer || undefined,
+      },
       featured,
       order: Number(order),
     });
-    onClose();
   };
 
   if (!isOpen) return null;
@@ -135,12 +119,12 @@ export function ProjectDrawer({
           <div className="flex items-center justify-between border-b border-slate-800 px-6 py-5">
             <div>
               <h2 className="text-xl font-bold text-white tracking-tight">
-                {projectToEdit ? 'Edit Project' : 'Create New Project'}
+                {projectToEdit ? "Edit Project" : "Create New Project"}
               </h2>
               <p className="text-xs text-slate-400 mt-0.5">
                 {projectToEdit
                   ? `Updating details for "${projectToEdit.title}"`
-                  : 'Fill in details to showcase a new portfolio project'}
+                  : "Fill in details to showcase a new portfolio project"}
               </p>
             </div>
             <button
@@ -195,7 +179,9 @@ export function ProjectDrawer({
                 </label>
                 <select
                   value={category}
-                  onChange={(e) => setCategory(e.target.value as ProjectCategory)}
+                  onChange={(e) =>
+                    setCategory(e.target.value as ProjectCategory)
+                  }
                   className="mt-1.5 w-full rounded-xl border border-slate-800 bg-slate-950 px-3.5 py-2 text-slate-200 focus:border-indigo-500 focus:outline-none"
                 >
                   {CATEGORIES.map((cat) => (
@@ -227,7 +213,9 @@ export function ProjectDrawer({
                     onChange={(e) => setFeatured(e.target.checked)}
                     className="h-4 w-4 rounded border-slate-700 bg-slate-900 text-indigo-600 focus:ring-indigo-500 hidden"
                   />
-                  <Star className={`h-4 w-4 ${featured ? 'text-amber-400 fill-amber-400' : 'text-slate-400'}`} />
+                  <Star
+                    className={`h-4 w-4 ${featured ? "text-amber-400 fill-amber-400" : "text-slate-400"}`}
+                  />
                   <span className="text-xs font-semibold text-slate-200">
                     Featured Project
                   </span>
@@ -251,37 +239,10 @@ export function ProjectDrawer({
             </div>
 
             {/* Thumbnail Upload Zone & URL */}
-            <div>
-              <label className="block text-xs font-semibold text-slate-300">
-                Thumbnail Image
-              </label>
-              <div className="mt-1.5 flex flex-col gap-3 sm:flex-row sm:items-center">
-                {thumbnail && (
-                  <div className="relative h-20 w-32 overflow-hidden rounded-xl border border-slate-700 bg-slate-950">
-                    <img
-                      src={thumbnail}
-                      alt="Thumbnail preview"
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                )}
-                <div className="flex-1">
-                  <div className="flex rounded-xl border border-slate-800 bg-slate-950 p-4 border-dashed text-center flex-col items-center justify-center">
-                    <Upload className="h-5 w-5 text-indigo-400" />
-                    <p className="mt-1 text-xs text-slate-300">
-                      Drag & drop cover image, or paste Image URL below
-                    </p>
-                    <input
-                      type="text"
-                      value={thumbnail}
-                      onChange={(e) => setThumbnail(e.target.value)}
-                      placeholder="https://images.unsplash.com/..."
-                      className="mt-2 w-full rounded-lg border border-slate-800 bg-slate-900 px-3 py-1.5 text-xs text-slate-200 placeholder-slate-500 focus:border-indigo-500 focus:outline-none"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
+            <UploadImage
+              thumbnail={thumbnail}
+              setThumbnail={(link) => setThumbnail(link)}
+            />
 
             {/* Tech Stack Tags Input */}
             <div>
@@ -294,7 +255,7 @@ export function ProjectDrawer({
                   value={tagInput}
                   onChange={(e) => setTagInput(e.target.value)}
                   onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
+                    if (e.key === "Enter") {
                       e.preventDefault();
                       handleAddTag();
                     }
@@ -314,7 +275,7 @@ export function ProjectDrawer({
 
               {/* Added Tags Pills */}
               <div className="mt-2.5 flex flex-wrap gap-1.5">
-                {techStack.map((tag) => (
+                {technologies.map((tag) => (
                   <span
                     key={tag}
                     className="inline-flex items-center gap-1 rounded-lg border border-indigo-500/30 bg-indigo-500/10 px-2.5 py-1 text-xs font-semibold text-indigo-300"
@@ -344,8 +305,8 @@ export function ProjectDrawer({
                 </div>
                 <input
                   type="url"
-                  value={liveUrl}
-                  onChange={(e) => setLiveUrl(e.target.value)}
+                  value={live}
+                  onChange={(e) => setLive(e.target.value)}
                   placeholder="https://myproject.com"
                   className="w-full rounded-xl border border-slate-800 bg-slate-900 px-3.5 py-1.5 text-xs text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none"
                 />
@@ -359,8 +320,8 @@ export function ProjectDrawer({
                   </div>
                   <input
                     type="url"
-                    value={githubClientUrl}
-                    onChange={(e) => setGithubClientUrl(e.target.value)}
+                    value={githubClient}
+                    onChange={(e) => setGithubClient(e.target.value)}
                     placeholder="https://github.com/user/client"
                     className="w-full rounded-xl border border-slate-800 bg-slate-900 px-3.5 py-1.5 text-xs text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none"
                   />
@@ -373,8 +334,8 @@ export function ProjectDrawer({
                   </div>
                   <input
                     type="url"
-                    value={githubServerUrl}
-                    onChange={(e) => setGithubServerUrl(e.target.value)}
+                    value={githubServer}
+                    onChange={(e) => setGithubServer(e.target.value)}
                     placeholder="https://github.com/user/server"
                     className="w-full rounded-xl border border-slate-800 bg-slate-900 px-3.5 py-1.5 text-xs text-white placeholder-slate-500 focus:border-indigo-500 focus:outline-none"
                   />
@@ -388,72 +349,15 @@ export function ProjectDrawer({
                 <label className="text-xs font-semibold text-slate-300">
                   Full Project Description (Markdown)
                 </label>
-                <div className="flex items-center rounded-lg bg-slate-900 p-0.5 border border-slate-800">
-                  <button
-                    type="button"
-                    onClick={() => setEditorTab('write')}
-                    className={`flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-semibold cursor-pointer ${editorTab === 'write'
-                      ? 'bg-indigo-600 text-white'
-                      : 'text-slate-400 hover:text-white'
-                      }`}
-                  >
-                    <Edit3 className="h-3 w-3" />
-                    Write
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setEditorTab('preview')}
-                    className={`flex items-center gap-1 rounded-md px-2.5 py-1 text-xs font-semibold cursor-pointer ${editorTab === 'preview'
-                      ? 'bg-indigo-600 text-white'
-                      : 'text-slate-400 hover:text-white'
-                      }`}
-                  >
-                    <Eye className="h-3 w-3" />
-                    Live Preview
-                  </button>
-                </div>
               </div>
 
-              {editorTab === 'write' ? (
-                <textarea
-                  rows={6}
-                  value={fullDescription}
-                  onChange={(e) => setFullDescription(e.target.value)}
-                  placeholder="### Detailed Overview&#10;&#10;Write comprehensive markdown description of features, architecture, and deployment steps..."
-                  className="w-full rounded-xl border border-slate-800 bg-slate-900 p-3 font-mono text-xs text-slate-200 placeholder-slate-500 focus:border-indigo-500 focus:outline-none"
-                />
-              ) : (
-                <div className="min-h-[140px] rounded-xl border border-slate-800 bg-slate-900/60 p-4 text-xs text-slate-300 leading-relaxed space-y-2">
-                  {fullDescription ? (
-                    fullDescription.split('\n').map((line, idx) => {
-                      if (line.startsWith('### ')) {
-                        return (
-                          <h3 key={idx} className="text-sm font-bold text-white mt-2">
-                            {line.replace('### ', '')}
-                          </h3>
-                        );
-                      }
-                      if (line.startsWith('#### ')) {
-                        return (
-                          <h4 key={idx} className="text-xs font-bold text-indigo-400 mt-2">
-                            {line.replace('#### ', '')}
-                          </h4>
-                        );
-                      }
-                      if (line.startsWith('- ')) {
-                        return (
-                          <li key={idx} className="ml-4 list-disc text-slate-300">
-                            {line.replace('- ', '')}
-                          </li>
-                        );
-                      }
-                      return <p key={idx}>{line}</p>;
-                    })
-                  ) : (
-                    <p className="text-slate-500 italic">No description written yet.</p>
-                  )}
-                </div>
-              )}
+              <textarea
+                rows={6}
+                value={fullDescription}
+                onChange={(e) => setFullDescription(e.target.value)}
+                placeholder="### Detailed Overview&#10;&#10;Write comprehensive markdown description of features, architecture, and deployment steps..."
+                className="w-full rounded-xl border border-slate-800 bg-slate-900 p-3 font-mono text-xs text-slate-200 placeholder-slate-500 focus:border-indigo-500 focus:outline-none"
+              />
             </div>
 
             {/* Bottom Drawer Form Actions */}
@@ -470,7 +374,9 @@ export function ProjectDrawer({
                 className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-600 px-5 py-2 text-xs font-semibold text-white shadow-lg shadow-indigo-500/20 hover:from-indigo-600 hover:to-violet-700 transition-all cursor-pointer"
               >
                 <Check className="h-4 w-4" />
-                <span>{projectToEdit ? 'Save Changes' : 'Publish Project'}</span>
+                <span>
+                  {projectToEdit ? "Save Changes" : "Publish Project"}
+                </span>
               </button>
             </div>
           </form>
